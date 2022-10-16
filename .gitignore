@@ -1,8 +1,12 @@
 *.ignore
 *.ignore.*
 
-newsroom-human-eval.csv
-newsroom_human_eval_with_refs.csv
+dataloader/newsroom-human-eval.csv
+dataloader/newsroom_human_eval_with_refs.csv
+dataloader/src.txt
+dataloader/abs.pkl
+dataloader/ext.pkl
+dataloader/cnndm/
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,python,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,python,pycharm

@@ -16,10 +16,18 @@ datasets = {
         "refs_path": "/media/forrest/12T_EasyStore1/data/NLP/resources/newsroom/test.jsonl"
     },
     "realsumm_abs": {
+        "docID_column": "doc_id",
+        "document_column": "ArticleText",
+        "system_summary_column": "SystemSummary",
+        "reference_summary_column": "ReferenceSummary",
         "human_metrics": ["litepyramid_recall"],
         "approaches": ["trad", "new"]
     },
     "realsumm_ext": {
+        "docID_column": "doc_id",
+        "document_column": "ArticleText",
+        "system_summary_column": "SystemSummary",
+        "reference_summary_column": "ReferenceSummary",
         "human_metrics": ["litepyramid_recall"],
         "approaches": ["trad", "new"]
     },
