@@ -3,10 +3,15 @@
 
 dataloader/newsroom-human-eval.csv
 dataloader/newsroom_human_eval_with_refs.csv
+dataloader/test.jsonl
 dataloader/src.txt
 dataloader/abs.pkl
 dataloader/ext.pkl
+dataloader/summeval_annotations.aligned.paired.scored.jsonl
 dataloader/cnndm/
+dataloader/cnn_stories.tgz
+dataloader/dailymail_stories.tgz
+dataloader/summeval_annotations.aligned.scored.jsonl
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,python,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,python,pycharm

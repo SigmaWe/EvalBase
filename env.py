@@ -21,7 +21,8 @@ datasets = {
         "system_summary_column": "SystemSummary",
         "reference_summary_column": "ReferenceSummary",
         "human_metrics": ["litepyramid_recall"],
-        "approaches": ["trad", "new"]
+        "approaches": ["trad", "new"],
+        "path": "dataloader/abs.pkl"
     },
     "realsumm_ext": {
         "docID_column": "doc_id",
@@ -29,12 +30,17 @@ datasets = {
         "system_summary_column": "SystemSummary",
         "reference_summary_column": "ReferenceSummary",
         "human_metrics": ["litepyramid_recall"],
-        "approaches": ["trad", "new"]
+        "approaches": ["trad", "new"],
+        "data_path": "dataloader/ext.pkl"
     },
     "summeval": {
         "human_metrics": ["consistency", "relevance", "coherence", "fluency"],
+        "docID_column": "id",
+        "document_column": "ArticleText",
+        "system_summary_column": "SystemSummary",
         "reference_summary_column": "ReferenceSummary_0",  # the id ranges from 0 to 10
-        "approaches": ["trad", "new"]
+        "approaches": ["trad", "new"],
+        "data_path": "dataloader/summeval_annotations.aligned.paired.scored.jsonl"
     },
     "tac2010": {
         "human_metrics": ["Pyramid", "Linguistic", "Overall"],

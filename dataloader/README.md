@@ -1,10 +1,22 @@
 # Data Files
 
-- Newsroom
-  - newsroom-human-eval.csv
-  - newsroom_human_eval_with_refs.csv
-  - test.jsonl
-- RealSumm
-  - abs.pkl
-  - ext.pkl
-  - src.txt
+- Datasets
+  - Newsroom
+    - newsroom_human_eval_with_refs.csv (required)
+    - newsroom-human-eval.csv
+    - test.jsonl
+  - RealSumm
+    - abs.pkl (required)
+    - ext.pkl (required)
+    - src.txt (required)
+  - SummEval
+    - summeval_annotations.aligned.paired.scored.jsonl (required)
+    - cnndm/
+    - cnn_stories.tgz
+    - dailymail_stories.tgz
+    - summeval_annotations.aligned.scored.jsonl
+- suenes-newsroom/ (library)
+  - human/summeval/pair_data.py
+- Scripts
+  - realsumm_build.sh
+  - summeval_build.sh

@@ -103,11 +103,10 @@ def load_realsumm(pickfile: str):
 
 
 def main(system_type: typing.Literal["ext", "abs"]):
-    dataset_df = load_realsumm(f'dataloader/{system_type}.pkl')
+    dataset_config = env.datasets[f"realsumm_{system_type}"]
+    dataset_df = load_realsumm(dataset_config["data_path"])
 
     import eval_util  # DocAsRef's
-
-    dataset_config = env.datasets[f"realsumm_{system_type}"]
 
     corr_df = eval_util.eval_summary_level(
         dataset_df,
