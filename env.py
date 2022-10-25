@@ -50,7 +50,7 @@ datasets = {
 
 metrics = {
 #    "bleurt": evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric').compute, 
-    "rouge":  functools.partial( evaluate.load("rouge").compute,  use_aggregator="False") , 
+    "rouge":  functools.partial( evaluate.load("rouge").compute,  use_aggregator=False) , 
     "bertscore":  functools.partial( evaluate.load("bertscore").compute, lang='en', use_fast_tokenizer=True) ,
 }
 

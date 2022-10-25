@@ -25,7 +25,18 @@ It automatically evaluates metrics specified in the configuration file `env.py` 
   - `TAC2010_Summarization_Documents.tgz` Emailed by NIST, containing the documents for which summaries are generated and rated. 
   Both files require you to apply to NIST for access. 
 
-### Add your new metrics into the test
+### Running the evaluations
+Once you have the files above, you can run the evaluations: 
+
+```shell
+mkdir results
+python3 -c "import realsumm; realsumm.main('abs')" # On RealSumm's abstractive subset
+python3 -c "import realsumm; realsumm.main('ext')" # On RealSumm's extractive subset
+python3 -c "import summeval; summeval.main()" # On SummEval
+# python3 -c "import newsroom; newsroom.main()" # On Newsroom, currently has bugs
+```
+
+### Adding your new metrics into the test
 Just add your metric as an entry into the `metrics` dictionary (keys are metric names as strings while values are functions -- see below) in `env.py`.
 
 Each metric function must follow the I/O of HuggingFace's [the BERTScore function](https://huggingface.co/spaces/evaluate-metric/bertscore) in the `evaluate` library: 
@@ -36,7 +47,7 @@ Each metric function must follow the I/O of HuggingFace's [the BERTScore functio
 
 ### GPU
 
-There are memory leaks when using GPUs. So, please distable GPUs: 
+There are memory leaks when using GPUs. So, please disable GPUs: 
 ```shell
 export CUDA_VISIBLE_DEVICES=''
 ```
@@ -44,7 +55,8 @@ export CUDA_VISIBLE_DEVICES=''
 ## File structures/functions
 * `env.py`: configurations of experimental settings
 * `eval.py`: scoring summaries using automated metrics and computing their correlations with human scores
-  - `eval_summary_level`: the main function that does summary-level evaluation. It loads a `dataset_df` (see specifications below)./
+  - `eval_summary_level`: the main function that does summary-level evaluation. It loads a `dataset_df` (see specifications below).
+  - `eval_system_level`: **To be finished by those taking CS 579X**
 * `newsroom.py`: Run experiments on Newsroom dataset
 
 
