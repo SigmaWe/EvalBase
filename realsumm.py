@@ -111,7 +111,7 @@ def main(system_type: typing.Literal["ext", "abs"]):
     corr_df = eval_util.eval_summary_level(
         dataset_df,
         exp_approaches=dataset_config["approaches"],
-        exp_models=env.models,
+        exp_models=env.metrics,
         corr_metrics=env.corr_metrics,
         document_column=dataset_config["document_column"],
         docID_column=dataset_config["docID_column"],
@@ -124,6 +124,7 @@ def main(system_type: typing.Literal["ext", "abs"]):
                                 'bert_f_score'],
         debug=False
     )
+
     with pandas.option_context('display.max_rows', None,
                                'display.max_columns', None,
                                'display.precision', 3,

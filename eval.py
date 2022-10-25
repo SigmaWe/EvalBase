@@ -3,7 +3,7 @@ import realsumm
 import summeval
 
 if __name__ == '__main__':
-    newsroom.main()
+    # newsroom.main()
     realsumm.main("abs")
     realsumm.main("ext")
-    summeval.main()
+    # summeval.main()
