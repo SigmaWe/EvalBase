@@ -28,9 +28,21 @@ def model_eval(
         sys_summaries: list,
         ref_summaries: list,
         docs: list,
-        models: typing.List[str],
+        metrics: dict, # keys as strings, and values as functions
         approaches: typing.List[str]) -> pandas.DataFrame:
     """Given a batch of samples, run various automated summary metrics to evaluate the quality of summaries. 
+
+    All values in models must be functions of the following signature: 
+    foo(output_text, input_text)
+    E.g., 
+
+    metrics = {
+       "bleurt": evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric').compute, 
+       "rouge":  functool.partial( evaluate.load("rouge").compute,  use_aggregate="False") 
+    }
+
+    input_text can be a reference (in ref-based mode) or a source text (in ref-free mode). 
+
     """
 
     # Create a placeholder multiindex Dataframe
@@ -39,33 +51,17 @@ def model_eval(
     index = pandas.MultiIndex.from_tuples([], names=["approach", "model", "score_name"])
     batch_result_df = pandas.DataFrame((), columns=index)
 
-    for model_name in models:
-        # print('Model: ' + model_name)
-        if model_name == 'bleurt':
-            model = evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric')
-        elif model_name == 'bertscore-sentence':
-            model = env.bertscore_sentence
-        else:
-            model = evaluate.load(model_name)
-
-        # calculate traditional (reference, system summary) pairs and new (document, system summary) pairs
+    for metric_name, metric_fn in metrics.items():
         for approach in approaches:
             # print('Evaluating on ' + approach + ' approach')
             cands = sys_summaries
             refs = ref_summaries if approach == "trad" else docs
-            if model_name == 'bertscore':
-                model_result = model.compute(predictions=cands, references=refs, lang='en', use_fast_tokenizer=True)
-            elif model_name == 'rouge':
-                model_result = model.compute(predictions=cands, references=refs, use_aggregator=False)
-            elif model_name == 'bertscore-sentence':
-                model_result = model.compute(predictions=cands, references=refs)
-            else:
-                model_result = model.compute(predictions=cands, references=refs)
+            model_result = metric_fn(predictions=cands, references=refs)
 
             # model_result is a dict, e.g., {'ROUGE-1': [0.1, 0.9, 0.8], 'ROUGE-2':[0.5, 0.7 0.8]} each item in a value-list corresponds to a (doc, sys summ) pair  or a (ref summ, sys summ) pair. 
             for score_name, score_list in model_result.items():
                 if score_name != "hashcode":
-                    batch_result_df[approach, model_name, score_name] = score_list
+                    batch_result_df[approach, metric_name, score_name] = score_list
 
     return batch_result_df
 
@@ -117,7 +113,7 @@ def pool_multidoc(batch_df: pandas.DataFrame, result_df: pandas.DataFrame):
 def eval_summary_level(
         dataset_df: pandas.DataFrame,
         exp_approaches: typing.List[str],
-        exp_models: typing.List[str] = env.models,
+        exp_models: typing.List[str] = env.metrics,
         corr_metrics: typing.List[str] = env.corr_metrics,
         document_column: str = "",
         docID_column: str = "",  # TODO: some in newsroom, realsumm, summeval have not supported this yet

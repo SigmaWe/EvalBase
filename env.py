@@ -1,8 +1,7 @@
 import sys
-sys.path.append("/Users/turx/Projects/Research/dar/DocAsRef/")
-import bertscore_sentence.eval as bertscore_sentence
+import functools 
+import evaluate
 
-models = ["rouge", "bleurt", "bertscore", "bertscore-sentence"]
 datasets = {
     "newsroom": {
         "human_metrics": ["InformativenessRating", "RelevanceRating", "CoherenceRating", "FluencyRating"],
@@ -13,7 +12,7 @@ datasets = {
         "approaches": ["trad", "new"],
         "human_eval_only_path": "dataloader/newsroom-human-eval.csv",
         "human_eval_w_refs_path": "dataloader/newsroom_human_eval_with_refs.csv",
-        "refs_path": "/media/forrest/12T_EasyStore1/data/NLP/resources/newsroom/test.jsonl"
+        "refs_path": "dataloader/test.jsonl"
     },
     "realsumm_abs": {
         "docID_column": "doc_id",
@@ -22,7 +21,7 @@ datasets = {
         "reference_summary_column": "ReferenceSummary",
         "human_metrics": ["litepyramid_recall"],
         "approaches": ["trad", "new"],
-        "path": "dataloader/abs.pkl"
+        "data_path": "dataloader/abs.pkl"
     },
     "realsumm_ext": {
         "docID_column": "doc_id",
@@ -48,5 +47,12 @@ datasets = {
         "docID_column": "docsetID"
     }
 }
-eval_metrics = ["rouge1", "rouge2", "rougeL", "rougeLsum", "bertscore", "bleurt", "bertscore-sentence"]
+
+metrics = {
+#    "bleurt": evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric').compute, 
+    "rouge":  functools.partial( evaluate.load("rouge").compute,  use_aggregator="False") , 
+    "bertscore":  functools.partial( evaluate.load("bertscore").compute, lang='en', use_fast_tokenizer=True) ,
+}
+
+
 corr_metrics = ["pearsonr", "kendalltau", "spearmanr"]
