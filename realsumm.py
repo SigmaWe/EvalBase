@@ -106,9 +106,9 @@ def main(system_type: typing.Literal["ext", "abs"]):
     dataset_config = env.datasets[f"realsumm_{system_type}"]
     dataset_df = load_realsumm(dataset_config["data_path"])
 
-    import eval_util  # DocAsRef's
+    import eval_utils 
 
-    corr_df = eval_util.eval_summary_level(
+    corr_df = eval_utils.eval_summary_level(
         dataset_df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
@@ -128,6 +128,7 @@ def main(system_type: typing.Literal["ext", "abs"]):
     with pandas.option_context('display.max_rows', None,
                                'display.max_columns', None,
                                'display.precision', 3,
+                               'display.float_format', lambda x: '%.3f' % x
                                ):
         with open(f"results/result_realsumm_{system_type}.txt", 'w') as f:
             # f.write("```\n")

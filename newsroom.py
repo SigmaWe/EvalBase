@@ -12,7 +12,6 @@ import pandas
 import tqdm
 
 import env
-import eval_util  # DocAsRef's
 import os.path
 
 
@@ -221,10 +220,13 @@ def main():
             dump_csv=human_evaluation_csv_with_refs)
     df = pool_human_rating(df)
     dataset_config = env.datasets["newsroom"]
-    corr_df = eval_util.eval_summary_level(
+
+    import eval_utils
+
+    corr_df = eval_utils.eval_summary_level(
         dataset_df=df,
         exp_approaches=dataset_config["approaches"],
-        exp_models=env.models,
+        exp_models=env.metrics,
         corr_metrics=env.corr_metrics,
         document_column=dataset_config["document_column"],
         docID_column=dataset_config["docID_column"],
@@ -237,9 +239,11 @@ def main():
     with pandas.option_context('display.max_rows', None,
                                'display.max_columns', None,
                                'display.precision', 3,
+                               'display.float_format', lambda x: '%.3f' % x
                                ):
-        with open("results/newsroom_results.txt", 'w') as f:
-            f.write(str(corr_df['average']))
+        with open("results/results_newsroom.txt", 'w') as f:
+            f.write(corr_df['average'].to_string())
+        # print(corr_df['average'])
 
     with open("results/newsroom_results.json", 'w') as f:
         json_ugly = corr_df.to_json(orient="index")

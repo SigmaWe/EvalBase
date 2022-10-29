@@ -108,12 +108,12 @@ def main():
         'bert_score_precision', 'bert_score_recall', 'bert_score_f1',
         'blanc', 'summaqa_avg_prob', 'summaqa_avg_fscore', 'supert']
 
-    import eval_util
+    import eval_utils
 
-    corr_df = eval_util.eval_summary_level(
+    corr_df = eval_utils.eval_summary_level(
         dataset_df,
         exp_approaches=dataset_config["approaches"],
-        exp_models=env.models,
+        exp_models=env.metrics,
         corr_metrics=env.corr_metrics,
         document_column=dataset_config["document_column"],
         docID_column=dataset_config["docID_column"],
@@ -130,7 +130,7 @@ def main():
                                ):
         with open("results/result_summeval.txt", 'w') as f:
             f.write(corr_df['average'].to_string())
-        print(corr_df['average'])
+        # print(corr_df['average'])
 
     with open(f"results/result_summeval.json", 'w') as f:
         json_ugly = corr_df.to_json(orient="index")

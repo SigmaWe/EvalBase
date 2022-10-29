@@ -10,6 +10,8 @@ tar -xvzf dailymail_stories.tgz -C cnndm
 
 wget -O summeval_annotations.aligned.scored.jsonl "https://drive.google.com/u/0/uc?id=1d2Iaz3jNraURP1i7CfTqPIj8REZMJ3tS&export=download"
 
-python3 suenes-newsroom/human/summeval/pair_data.py --data_annotations summeval_annotations.aligned.scored.jsonl --story_files .
+wget https://raw.githubusercontent.com/Yale-LILY/SummEval/master/data_processing/pair_data.py
+
+python3 pair_data.py --data_annotations summeval_annotations.aligned.scored.jsonl --story_files .
 
 # rm -r cnndm/
