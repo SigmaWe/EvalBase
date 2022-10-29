@@ -1,4 +1,0 @@
-[submodule "dataloader/suenes-newsroom"]
-	path = dataloader/suenes-newsroom
-	url = https://github.com/forrestbao/SueNes.git
-	branch = newsroom
