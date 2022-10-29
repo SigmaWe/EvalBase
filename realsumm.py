@@ -108,6 +108,7 @@ def main(system_type: typing.Literal["ext", "abs"]):
 
     import eval_utils 
 
+    print(f"RealSumm {system_type} Summary-Level")
     corr_df = eval_utils.eval_summary_level(
         dataset_df,
         exp_approaches=dataset_config["approaches"],
@@ -124,19 +125,31 @@ def main(system_type: typing.Literal["ext", "abs"]):
                                 'bert_f_score'],
         debug=False
     )
+    eval_utils.write_results(
+        df=corr_df['average'],
+        simple_path=dataset_config["result_summary_simple_path"],
+        detail_path=dataset_config["result_summary_detail_path"]
+    )
 
-    with pandas.option_context('display.max_rows', None,
-                               'display.max_columns', None,
-                               'display.precision', 3,
-                               'display.float_format', lambda x: '%.3f' % x
-                               ):
-        with open(f"results/result_realsumm_{system_type}.txt", 'w') as f:
-            # f.write("```\n")
-            f.write(corr_df['average'].to_string())
-            # f.write("\n```")
-        # print(corr_df['average'])
-
-    with open(f"results/result_realsumm_{system_type}.json", 'w') as f:
-        json_ugly = corr_df.to_json(orient="index")
-        json_parsed = json.loads(json_ugly)
-        f.write(json.dumps(json_parsed, indent=2))
+    print(f"RealSumm {system_type} System-Level")
+    corr_df = eval_utils.eval_system_level(
+        dataset_df,
+        exp_approaches=dataset_config["approaches"],
+        exp_models=env.metrics,
+        corr_metrics=env.corr_metrics,
+        document_column=dataset_config["document_column"],
+        docID_column=dataset_config["docID_column"],
+        system_summary_column=dataset_config["system_summary_column"],
+        reference_summary_column=dataset_config["reference_summary_column"],
+        human_metrics=dataset_config["human_metrics"],
+        pre_calculated_metrics=['rouge_1_f_score', 'rouge_2_recall', 'rouge_l_recall', 'rouge_2_precision',
+                                'rouge_2_f_score', 'rouge_1_precision', 'rouge_1_recall', 'rouge_l_precision',
+                                'rouge_l_f_score', 'js-2', 'mover_score', 'bert_recall_score', 'bert_precision_score',
+                                'bert_f_score'],
+        debug=False
+    )
+    eval_utils.write_results(
+        df=corr_df,
+        simple_path=dataset_config["result_system_simple_path"],
+        detail_path=dataset_config["result_system_detail_path"]
+    )

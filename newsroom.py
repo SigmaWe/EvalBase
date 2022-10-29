@@ -223,6 +223,7 @@ def main():
 
     import eval_utils
 
+    print("Newsroom Summary-Level")
     corr_df = eval_utils.eval_summary_level(
         dataset_df=df,
         exp_approaches=dataset_config["approaches"],
@@ -236,17 +237,28 @@ def main():
         debug=False,
         is_multi=False
     )
-    with pandas.option_context('display.max_rows', None,
-                               'display.max_columns', None,
-                               'display.precision', 3,
-                               'display.float_format', lambda x: '%.3f' % x
-                               ):
-        with open("results/results_newsroom.txt", 'w') as f:
-            f.write(corr_df['average'].to_string())
-        # print(corr_df['average'])
+    eval_utils.write_results(
+        df=corr_df['average'],
+        simple_path=dataset_config["result_summary_simple_path"],
+        detail_path=dataset_config["result_summary_detail_path"]
+    )
 
-    with open("results/newsroom_results.json", 'w') as f:
-        json_ugly = corr_df.to_json(orient="index")
-        json_parsed = json.loads(json_ugly)
-        f.write(json.dumps(json_parsed, indent=2))
-        # f.write(str((corr_df.to_dict())))
+    print("Newsroom System-Level")
+    corr_df = eval_utils.eval_system_level(
+        dataset_df=df,
+        exp_approaches=dataset_config["approaches"],
+        exp_models=env.metrics,
+        corr_metrics=env.corr_metrics,
+        document_column=dataset_config["document_column"],
+        docID_column=dataset_config["docID_column"],
+        system_summary_column=dataset_config["system_summary_column"],
+        reference_summary_column=dataset_config["reference_summary_column"],
+        human_metrics=dataset_config["human_metrics"],
+        debug=False,
+        is_multi=False
+    )
+    eval_utils.write_results(
+        df=corr_df,
+        simple_path=dataset_config["result_system_simple_path"],
+        detail_path=dataset_config["result_system_detail_path"]
+    )

@@ -1,6 +1,7 @@
 import evaluate
 import pandas
 import scipy
+import json
 
 import env
 
@@ -113,7 +114,7 @@ def pool_multidoc(batch_df: pandas.DataFrame, result_df: pandas.DataFrame):
 def eval_summary_level(
         dataset_df: pandas.DataFrame,
         exp_approaches: typing.List[str],
-        exp_models: typing.List[str] = env.metrics,
+        exp_models: typing.Dict[str, typing.Callable] = env.metrics,
         corr_metrics: typing.List[str] = env.corr_metrics,
         document_column: str = "",
         docID_column: str = "",  # TODO: some in newsroom, realsumm, summeval have not supported this yet
@@ -180,11 +181,66 @@ def eval_summary_level(
     return corr_df
 
 
-def eval_system_level():
+def eval_system_level(
+        dataset_df: pandas.DataFrame,
+        exp_approaches: typing.List[str],
+        exp_models: typing.Dict[str, typing.Callable] = env.metrics,
+        corr_metrics: typing.List[str] = env.corr_metrics,
+        document_column: str = "",
+        docID_column: str = "",  # TODO: some in newsroom, realsumm, summeval have not supported this yet
+        system_summary_column: str = "",
+        reference_summary_column: str = "",
+        human_metrics: typing.List[str] = [],
+        pre_calculated_metrics: typing.List[str] = [],  # some datasets contain metric scores
+        debug=False,
+        is_multi=False,  # multi-document summarization
+):
     """Get system-level scores for system summaries using various scoring methods. 
 
-    System-level evaluation means that we compute corraltion for each system and then average across systems
+    System-level evaluation means that we compute correlation for each system and then average across systems
 
     """
+    index = pandas.MultiIndex.from_tuples(
+        [],
+        names=["corr_metric", "aspect", "approach", "model", "score_name"])
+    corr_df = pandas.DataFrame((), index=index)
 
-    pass
+    overall_human_scores = pandas.DataFrame((), index=index)
+    overall_batch_result_df = pandas.DataFrame((), index=index)
+
+    for batchID, docID in enumerate(tqdm.tqdm(dataset_df[docID_column].unique())):
+        batch = dataset_df[dataset_df[docID_column] == docID]
+        docs = batch[document_column].to_numpy()
+        sys_summs = batch[system_summary_column].to_numpy()
+        ref_summs = batch[reference_summary_column].to_numpy()
+        human_scores = batch[human_metrics]  # a DF
+
+        batch_result_df = model_eval(sys_summs, ref_summs, docs, exp_models, exp_approaches)
+
+        if is_multi:
+            human_scores, batch_result_df = pool_multidoc(batch, batch_result_df)
+
+        if isinstance(pre_calculated_metrics, list) and len(pre_calculated_metrics) > 0:
+            for score_name in pre_calculated_metrics:
+                batch_result_df["PreCalc", "PreCalc", score_name] = batch[score_name].to_numpy()
+
+        overall_human_scores = pandas.concat([overall_human_scores, human_scores.mean(axis=0).to_frame().T], axis=0)  # append as a row
+        overall_batch_result_df = pandas.concat([overall_batch_result_df, batch_result_df.mean(axis=0).to_frame().T], axis=0)
+
+    corr_df = batched_corr(corr_df, overall_human_scores, overall_batch_result_df, corr_metrics, 0)[0]
+    return corr_df
+
+
+def write_results(df: pandas.DataFrame, simple_path: str, detail_path: str) -> None:
+    with pandas.option_context('display.max_rows', None,
+                               'display.max_columns', None,
+                               'display.precision', 3,
+                               'display.float_format', lambda x: '%.3f' % x
+                               ):
+        with open(simple_path, 'w') as f:
+            f.write(df.to_string())
+
+    with open(detail_path, 'w') as f:
+        json_ugly = df.to_json(orient="index")
+        json_parsed = json.loads(json_ugly)
+        f.write(json.dumps(json_parsed, indent=2))
