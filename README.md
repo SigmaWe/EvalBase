@@ -31,7 +31,7 @@ It automatically evaluates metrics specified in the configuration file `env.py` 
 Once you have the files above, you can run the evaluations: 
 
 ```shell
-bash exp.sh
+bash experiments.sh
 ```
 
 ### Where are the results? 
