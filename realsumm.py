@@ -126,9 +126,10 @@ def main(system_type: typing.Literal["ext", "abs"]):
         debug=False
     )
     eval_utils.write_results(
-        df=corr_df['average'],
-        simple_path=dataset_config["result_summary_simple_path"],
-        detail_path=dataset_config["result_summary_detail_path"]
+        simple_df=corr_df['average'],
+        detail_df=corr_df,
+        simple_path=f"results/realsumm_{system_type}_summary.txt",
+        detail_path=f"results/realsumm_{system_type}_summary.json"
     )
 
     print(f"RealSumm {system_type} System-Level")
@@ -149,7 +150,7 @@ def main(system_type: typing.Literal["ext", "abs"]):
         debug=False
     )
     eval_utils.write_results(
-        df=corr_df,
-        simple_path=dataset_config["result_system_simple_path"],
-        detail_path=dataset_config["result_system_detail_path"]
+        simple_df=corr_df,
+        simple_path=f"results/realsumm_{system_type}_system.txt",
+        detail_path=f"results/realsumm_{system_type}_system.json"
     )

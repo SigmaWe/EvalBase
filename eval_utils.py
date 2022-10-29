@@ -231,16 +231,24 @@ def eval_system_level(
     return corr_df
 
 
-def write_results(df: pandas.DataFrame, simple_path: str, detail_path: str) -> None:
+def write_results(
+        simple_df: pandas.DataFrame,
+        simple_path: str,
+        detail_path: str,
+        detail_df: typing.Optional[pandas.DataFrame] = None
+) -> None:
+    if detail_df is None:
+        detail_df = simple_df
+
     with pandas.option_context('display.max_rows', None,
                                'display.max_columns', None,
                                'display.precision', 3,
                                'display.float_format', lambda x: '%.3f' % x
                                ):
         with open(simple_path, 'w') as f:
-            f.write(df.to_string())
+            f.write(simple_df.to_string())
 
     with open(detail_path, 'w') as f:
-        json_ugly = df.to_json(orient="index")
+        json_ugly = detail_df.to_json(orient="index")
         json_parsed = json.loads(json_ugly)
         f.write(json.dumps(json_parsed, indent=2))

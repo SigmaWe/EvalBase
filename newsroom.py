@@ -238,9 +238,10 @@ def main():
         is_multi=False
     )
     eval_utils.write_results(
-        df=corr_df['average'],
-        simple_path=dataset_config["result_summary_simple_path"],
-        detail_path=dataset_config["result_summary_detail_path"]
+        simple_df=corr_df['average'],
+        detail_df=corr_df,
+        simple_path="results/newsroom_summary.txt",
+        detail_path="results/newsroom_summary.json"
     )
 
     print("Newsroom System-Level")
@@ -258,7 +259,7 @@ def main():
         is_multi=False
     )
     eval_utils.write_results(
-        df=corr_df,
-        simple_path=dataset_config["result_system_simple_path"],
-        detail_path=dataset_config["result_system_detail_path"]
+        simple_df=corr_df,
+        simple_path="results/newsroom_system.txt",
+        detail_path="results/newsroom_system.json"
     )
