@@ -9,7 +9,7 @@ import html
 import json
 
 import pandas
-import tqdm
+from tqdm.auto import tqdm
 
 import env
 import os.path
@@ -108,7 +108,7 @@ def append_reference_summaries_to_newsroom_human_evaluation(
     #                         id2ref[articleID] = ref_from_newsroom_jsonl
 
     with open(newsroom_test_jsonl, 'r') as f:
-        for line in tqdm.tqdm(f):
+        for line in tqdm(f):
             sample = json.loads(line)
             title_from_newsroom_jsonl = sample["title"]
             ref_from_newsroom_jsonl = sample["summary"]

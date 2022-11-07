@@ -1,6 +1,12 @@
 import functools
 import evaluate
 
+# fix: GPU OOM (TF exhausts GPU memory, crashing PyTorch)
+import tensorflow as tf
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+  tf.config.experimental.set_memory_growth(gpu, True)
+
 datasets = {
     "newsroom": {
         "human_metrics": ["InformativenessRating", "RelevanceRating", "CoherenceRating", "FluencyRating"],

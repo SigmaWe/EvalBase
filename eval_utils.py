@@ -8,7 +8,7 @@ import env
 
 
 import typing
-import tqdm
+from tqdm.auto import tqdm
 
 
 # TODO 
@@ -148,7 +148,7 @@ def eval_summary_level(
     # We could let the multilevel on columns,
     #  but the code will be slightly longer.
 
-    for batchID, docID in enumerate(tqdm.tqdm(dataset_df[docID_column].unique())):
+    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique())):
 
         if debug:
             if batchID > 2:
@@ -208,7 +208,7 @@ def eval_system_level(
     overall_human_scores = pandas.DataFrame((), index=index)
     overall_batch_result_df = pandas.DataFrame((), index=index)
 
-    for batchID, docID in enumerate(tqdm.tqdm(dataset_df[docID_column].unique())):
+    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique())):
         batch = dataset_df[dataset_df[docID_column] == docID]
         docs = batch[document_column].to_numpy()
         sys_summs = batch[system_summary_column].to_numpy()
