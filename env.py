@@ -52,7 +52,8 @@ metrics = {
     "bleurt": evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric').compute,
     "rouge":  functools.partial(evaluate.load("rouge").compute,  use_aggregator=False),
     "bertscore":  functools.partial(evaluate.load("bertscore").compute, lang='en', use_fast_tokenizer=True),
-    "pseudo_metric":functools.partial(pseudo_func.pseudo_func)
+    "pseudo_metric":functools.partial(pseudo_func.pseudo_func, model_name = 'google/pegasus-xsum',ref_based_metric_name='rouge')
+  
 }
 
 
