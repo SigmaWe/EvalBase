@@ -10,6 +10,8 @@ import env
 import typing
 from tqdm.auto import tqdm
 
+from type_piece import EvalPieces
+
 
 # TODO 
 # ref_{free,based}_metrics is a dict {str:function}
@@ -26,9 +28,9 @@ from tqdm.auto import tqdm
 
 
 def model_eval(
-        sys_summaries: list,
-        ref_summaries: list,
-        docs: list,
+        sys_summaries: EvalPieces,
+        ref_summaries: EvalPieces,
+        docs: EvalPieces,
         metrics: dict, # keys as strings, and values as functions
         approaches: typing.List[str]) -> pandas.DataFrame:
     """Given a batch of samples, run various automated summary metrics to evaluate the quality of summaries. 
@@ -112,6 +114,7 @@ def pool_multidoc(batch_df: pandas.DataFrame, result_df: pandas.DataFrame):
 
 # TODO: Default value shouldn't be tied to env
 def eval_summary_level(
+        dataset_name: str,
         dataset_df: pandas.DataFrame,
         exp_approaches: typing.List[str],
         exp_models: typing.Dict[str, typing.Callable] = env.metrics,
@@ -148,7 +151,7 @@ def eval_summary_level(
     # We could let the multilevel on columns,
     #  but the code will be slightly longer.
 
-    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique())):
+    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique(), desc=" ".join([dataset_name, "summary"]))):
 
         if debug:
             if batchID > 2:
@@ -156,9 +159,13 @@ def eval_summary_level(
 
         batch = dataset_df[dataset_df[docID_column] == docID]
         # without .to_numpy(), will run into issues starting from 2nd iteration 
-        docs = batch[document_column].to_numpy()
-        sys_summs = batch[system_summary_column].to_numpy()
-        ref_summs = batch[reference_summary_column].to_numpy()
+        # docs = batch[document_column].to_numpy()
+        # docs = np.expand_dims(docs, axis=0)
+        # docs_segs = [segmentation(piece) for piece in batch[document_column].to_numpy()]
+        # np.concatenate((docs, np.array(docs_segs).T), axis=1)
+        docs = EvalPieces(batch[document_column].to_numpy())
+        sys_summs = EvalPieces(batch[system_summary_column].to_numpy())
+        ref_summs = EvalPieces(batch[reference_summary_column].to_numpy())
         human_scores = batch[human_metrics]  # a DF
 
         batch_result_df = model_eval(sys_summs, ref_summs, docs, exp_models, exp_approaches)
@@ -182,6 +189,7 @@ def eval_summary_level(
 
 
 def eval_system_level(
+        dataset_name: str,
         dataset_df: pandas.DataFrame,
         exp_approaches: typing.List[str],
         exp_models: typing.Dict[str, typing.Callable] = env.metrics,
@@ -208,11 +216,11 @@ def eval_system_level(
     overall_human_scores = pandas.DataFrame((), index=index)
     overall_batch_result_df = pandas.DataFrame((), index=index)
 
-    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique())):
+    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique(), desc=" ".join([dataset_name, "system"]))):
         batch = dataset_df[dataset_df[docID_column] == docID]
-        docs = batch[document_column].to_numpy()
-        sys_summs = batch[system_summary_column].to_numpy()
-        ref_summs = batch[reference_summary_column].to_numpy()
+        docs = EvalPieces(batch[document_column].to_numpy())
+        sys_summs = EvalPieces(batch[system_summary_column].to_numpy())
+        ref_summs = EvalPieces(batch[reference_summary_column].to_numpy())
         human_scores = batch[human_metrics]  # a DF
 
         batch_result_df = model_eval(sys_summs, ref_summs, docs, exp_models, exp_approaches)

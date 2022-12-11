@@ -112,7 +112,8 @@ def main():
 
     print("SummEval Summary-Level")
     corr_df = eval_utils.eval_summary_level(
-        dataset_df,
+        dataset_name="summeval",
+        dataset_df=dataset_df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
         corr_metrics=env.corr_metrics,
@@ -133,7 +134,8 @@ def main():
 
     print("SummEval System-Level")
     corr_df = eval_utils.eval_system_level(
-        dataset_df,
+        dataset_name="summeval",
+        dataset_df=dataset_df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
         corr_metrics=env.corr_metrics,

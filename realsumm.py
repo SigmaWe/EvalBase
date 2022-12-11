@@ -5,6 +5,7 @@ import typing
 import pandas
 
 import env
+import os
 
 
 def clean_text(s: str):
@@ -69,7 +70,7 @@ def load_realsumm(pickfile: str):
                     6094, 6976, 7626, 8306, 9086, 9605, 10563, 11264, 1492, 2292, 3621, 4725, 5257, 5558, 6329, 7058,
                     7670, 8312, 9221, 9709]
     cnndm_test_articles = []
-    with open("dataloader/src.txt", "r", encoding="utf-8") as f:
+    with open(os.path.join(env.evalbase_path, "dataloader/src.txt"), "r", encoding="utf-8") as f:
         cnndm_test_articles = list(f)
 
     used_articles = [cnndm_test_articles[i] for i in used_test_id]
@@ -110,7 +111,8 @@ def main(system_type: typing.Literal["ext", "abs"]):
 
     print(f"RealSumm {system_type} Summary-Level")
     corr_df = eval_utils.eval_summary_level(
-        dataset_df,
+        dataset_name="realsumm",
+        dataset_df=dataset_df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
         corr_metrics=env.corr_metrics,
@@ -134,7 +136,8 @@ def main(system_type: typing.Literal["ext", "abs"]):
 
     print(f"RealSumm {system_type} System-Level")
     corr_df = eval_utils.eval_system_level(
-        dataset_df,
+        dataset_name="realsumm",
+        dataset_df=dataset_df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
         corr_metrics=env.corr_metrics,

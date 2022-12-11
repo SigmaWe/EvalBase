@@ -225,6 +225,7 @@ def main():
 
     print("Newsroom Summary-Level")
     corr_df = eval_utils.eval_summary_level(
+        dataset_name="newsroom",
         dataset_df=df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
@@ -246,6 +247,7 @@ def main():
 
     print("Newsroom System-Level")
     corr_df = eval_utils.eval_system_level(
+        dataset_name="newsroom",
         dataset_df=df,
         exp_approaches=dataset_config["approaches"],
         exp_models=env.metrics,
