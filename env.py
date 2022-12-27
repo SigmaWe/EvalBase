@@ -1,4 +1,3 @@
-import functools
 import os
 
 evalbase_path = os.path.dirname(os.path.abspath(__file__))
@@ -54,9 +53,6 @@ datasets = {
         "docID_column": "docsetID"
     }
 }
-
-import spacy
-nlp_spacy = spacy.load("en_core_web_lg")
 
 metrics = {}  # your metrics here
 

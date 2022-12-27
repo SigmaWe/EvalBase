@@ -10,8 +10,6 @@ import env
 import typing
 from tqdm.auto import tqdm
 
-from type_piece import EvalPieces
-
 
 # TODO 
 # ref_{free,based}_metrics is a dict {str:function}
@@ -28,9 +26,9 @@ from type_piece import EvalPieces
 
 
 def model_eval(
-        sys_summaries: EvalPieces,
-        ref_summaries: EvalPieces,
-        docs: EvalPieces,
+        sys_summaries: typing.List[str],
+        ref_summaries: typing.List[str],
+        docs: typing.List[str],
         metrics: dict, # keys as strings, and values as functions
         approaches: typing.List[str]) -> pandas.DataFrame:
     """Given a batch of samples, run various automated summary metrics to evaluate the quality of summaries. 
@@ -159,13 +157,9 @@ def eval_summary_level(
 
         batch = dataset_df[dataset_df[docID_column] == docID]
         # without .to_numpy(), will run into issues starting from 2nd iteration 
-        # docs = batch[document_column].to_numpy()
-        # docs = np.expand_dims(docs, axis=0)
-        # docs_segs = [segmentation(piece) for piece in batch[document_column].to_numpy()]
-        # np.concatenate((docs, np.array(docs_segs).T), axis=1)
-        docs = EvalPieces(batch[document_column].to_numpy())
-        sys_summs = EvalPieces(batch[system_summary_column].to_numpy())
-        ref_summs = EvalPieces(batch[reference_summary_column].to_numpy())
+        docs = batch[document_column].to_numpy()
+        sys_summs = batch[system_summary_column].to_numpy()
+        ref_summs = batch[reference_summary_column].to_numpy()
         human_scores = batch[human_metrics]  # a DF
 
         batch_result_df = model_eval(sys_summs, ref_summs, docs, exp_models, exp_approaches)
@@ -218,9 +212,9 @@ def eval_system_level(
 
     for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique(), desc=" ".join([dataset_name, "system"]))):
         batch = dataset_df[dataset_df[docID_column] == docID]
-        docs = EvalPieces(batch[document_column].to_numpy())
-        sys_summs = EvalPieces(batch[system_summary_column].to_numpy())
-        ref_summs = EvalPieces(batch[reference_summary_column].to_numpy())
+        docs = batch[document_column].to_numpy()
+        sys_summs = batch[system_summary_column].to_numpy()
+        ref_summs = batch[reference_summary_column].to_numpy()
         human_scores = batch[human_metrics]  # a DF
 
         batch_result_df = model_eval(sys_summs, ref_summs, docs, exp_models, exp_approaches)
