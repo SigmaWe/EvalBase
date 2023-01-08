@@ -4,6 +4,7 @@ import typing
 import pandas
 
 import env
+import evalbase
 
 
 def clean_text(s: str):
@@ -94,7 +95,7 @@ def load_summeval(paired_jsonl):
 
 
 def main():
-    dataset_config = env.datasets["summeval"]
+    dataset_config = evalbase.datasets["summeval"]
     dataset_df = load_summeval(dataset_config["data_path"])
 
     precalc_metrics = [  # keys from original SummEval json file

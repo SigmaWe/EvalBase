@@ -12,6 +12,7 @@ import pandas
 from tqdm.auto import tqdm
 
 import env
+import evalbase
 import os.path
 
 
@@ -204,7 +205,7 @@ def df_to_nested_dict(df: pandas.DataFrame) -> dict:
 
 
 def main():
-    human_evaluation_csv_with_refs = env.datasets["newsroom"]["human_eval_w_refs_path"]
+    human_evaluation_csv_with_refs = evalbase.datasets["newsroom"]["human_eval_w_refs_path"]
 
     if os.path.exists(human_evaluation_csv_with_refs):
         print("Loading data...")
@@ -212,14 +213,14 @@ def main():
     else:
         print("Appending reference summaries to Newsroom human evaluation part...")
         df = append_reference_summaries_to_newsroom_human_evaluation(
-            env.datasets["newsroom"]["human_eval_only_path"],
-            env.datasets["newsroom"]["refs_path"],
+            evalbase.datasets["newsroom"]["human_eval_only_path"],
+            evalbase.datasets["newsroom"]["refs_path"],
             # See doc above for function
             # append_reference_summaries_to_newsroom_human_evaluation
             # to see where to get the CSV and JSONL files
             dump_csv=human_evaluation_csv_with_refs)
     df = pool_human_rating(df)
-    dataset_config = env.datasets["newsroom"]
+    dataset_config = evalbase.datasets["newsroom"]
 
     import eval_utils
 

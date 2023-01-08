@@ -5,7 +5,7 @@ import sys
 
 import pandas
 
-import env
+import evalbase
 
 sys.path.append("../SueNes/human/tac")
 import tac
@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
     import eval_util
 
-    dataset_config = env.datasets["tac2010"]
+    dataset_config = evalbase.datasets["tac2010"]
 
     corr_df = eval_util.eval_summary_level(dataset_df, debug=debug, is_multi=True,
                                            docID_column=dataset_config["docID_column"])

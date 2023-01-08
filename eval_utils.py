@@ -52,7 +52,7 @@ def model_eval(
     index = pandas.MultiIndex.from_tuples([], names=["approach", "model", "score_name"])
     batch_result_df = pandas.DataFrame((), columns=index)
 
-    for metric_name, metric_fn in metrics.items():
+    for metric_name, metric_fn in tqdm(metrics.items(), desc="metrics", leave=False):
         for approach in approaches:
             # print('Evaluating on ' + approach + ' approach')
             cands = sys_summaries

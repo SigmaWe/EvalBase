@@ -5,6 +5,7 @@ import typing
 import pandas
 
 import env
+import evalbase
 import os
 
 
@@ -70,7 +71,7 @@ def load_realsumm(pickfile: str):
                     6094, 6976, 7626, 8306, 9086, 9605, 10563, 11264, 1492, 2292, 3621, 4725, 5257, 5558, 6329, 7058,
                     7670, 8312, 9221, 9709]
     cnndm_test_articles = []
-    with open(os.path.join(env.evalbase_path, "dataloader/src.txt"), "r", encoding="utf-8") as f:
+    with open(os.path.join(evalbase.path, "dataloader/src.txt"), "r", encoding="utf-8") as f:
         cnndm_test_articles = list(f)
 
     used_articles = [cnndm_test_articles[i] for i in used_test_id]
@@ -104,7 +105,7 @@ def load_realsumm(pickfile: str):
 
 
 def main(system_type: typing.Literal["ext", "abs"]):
-    dataset_config = env.datasets[f"realsumm_{system_type}"]
+    dataset_config = evalbase.datasets[f"realsumm_{system_type}"]
     dataset_df = load_realsumm(dataset_config["data_path"])
 
     import eval_utils 
