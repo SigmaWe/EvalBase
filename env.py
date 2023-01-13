@@ -1,11 +1,6 @@
 import functools
 import evaluate
-
-# fix: GPU OOM (TF exhausts GPU memory, crashing PyTorch)
-import tensorflow as tf
-gpus = tf.config.experimental.list_physical_devices('GPU')
-for gpu in gpus:
-  tf.config.experimental.set_memory_growth(gpu, True)
+import pseudo_func
 
 datasets = {
     "newsroom": {
@@ -14,7 +9,7 @@ datasets = {
         "document_column": "ArticleText",
         "system_summary_column": "SystemSummary",
         "reference_summary_column": "ReferenceSummary",
-        "approaches": ["trad", "new"],
+        "approaches": ["new"],
         "human_eval_only_path": "dataloader/newsroom-human-eval.csv",  # you need to get this file. See ReadMe.
         "refs_path": "dataloader/test.jsonl",  # you need to get this file. See ReadMe.
         "human_eval_w_refs_path": "dataloader/newsroom_human_eval_with_refs.csv"
@@ -57,6 +52,8 @@ metrics = {
     "bleurt": evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric').compute,
     "rouge":  functools.partial(evaluate.load("rouge").compute,  use_aggregator=False),
     "bertscore":  functools.partial(evaluate.load("bertscore").compute, lang='en', use_fast_tokenizer=True),
+    "pseudo_metric":functools.partial(pseudo_func.pseudo_func, model_name = 'google/pegasus-xsum',ref_based_metric_name='rouge')
+  
 }
 
 
