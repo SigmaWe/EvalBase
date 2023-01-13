@@ -7,6 +7,7 @@ from typing import List, Optional, Union
 
 #%% Load results JSON using Pandas
 def load_result_json_pandas(json_result: str):
+    print ("Loading result JSON using Pandas from ", json_result, " ...")
     df = pd.read_json(json_result)
     return df
 
