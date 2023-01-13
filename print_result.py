@@ -86,9 +86,10 @@ def beautiful_print(
             else: # get values for individual pairs of (model, scorer)
                 column = []
                 for model, scorer in model_scorer_tuples:
-                    if model == "PreCalc" :
-                        continue 
-                    value = s.loc[(corr_metric, aspect, approach, model, scorer)]
+                    if model == "PreCalc":
+                        value = s.loc[(corr_metric, aspect, "PreCalc", model, scorer)]
+                    else:
+                        value = s.loc[(corr_metric, aspect, approach, model, scorer)]
                     column.append(f"{value:.3f}")
 
             print_table.append(column)
@@ -139,7 +140,7 @@ if __name__ == "__main__":
     aspects = ["consistency", "relevance", "coherence", "fluency"]
     corr_metrics = ["spearmanr", "pearsonr", "kendalltau"]
     approaches = ["new", "trad"]
-    model_scorer_tuples = [("bertscore", "f1"), ("PreCalc", "bleurt")]
+    model_scorer_tuples = [("bertscore", "f1"), ("PreCalc", "supert")]
     # model_scorer_tuples = None 
     # End of configs
 
