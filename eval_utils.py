@@ -242,6 +242,13 @@ def write_results(
     if detail_df is None:
         detail_df = simple_df
 
+    parent_dir = os.path.dirname(simple_path)
+    if not os.path.exists(parent_dir):
+        os.makedirs(parent_dir)
+    parent_dir = os.path.dirname(detail_path)
+    if not os.path.exists(parent_dir):
+        os.makedirs(parent_dir)
+
     with pandas.option_context('display.max_rows', None,
                                'display.max_columns', None,
                                'display.precision', 3,
