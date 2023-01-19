@@ -113,7 +113,7 @@ def eval_summary_level(dataset_df, config):
         return
     corr_df = eval_utils.eval_summary_level(
         dataset_name=config['name'],
-        dataset_df=dataset_df[:5],
+        dataset_df=dataset_df,
         exp_approaches=config["approaches"],
         exp_models=env.metrics,
         corr_metrics=env.corr_metrics,
