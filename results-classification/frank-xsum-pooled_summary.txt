@@ -1,16 +1,16 @@
 corr_metric              aspect  approach  model                                              score_name
-balanced_accuracy_score  human   new       bertscore-sentence-mnli-deberta-entail_contradict  P_03         0.736
+balanced_accuracy_score  human   new       bertscore-sentence-mnli-deberta-entail_contradict  P_03         0.616
                                                                                               R_03         0.500
                                                                                               F_03         0.500
-                                                                                              P_04         0.720
+                                                                                              P_04         0.594
                                                                                               R_04         0.500
                                                                                               F_04         0.500
-                                                                                              P_05         0.720
+                                                                                              P_05         0.580
                                                                                               R_05         0.500
                                                                                               F_05         0.500
-                                                                                              P_06         0.721
+                                                                                              P_06         0.573
                                                                                               R_06         0.500
                                                                                               F_06         0.500
-                                                                                              P_07         0.716
+                                                                                              P_07         0.567
                                                                                               R_07         0.500
                                                                                               F_07         0.500
