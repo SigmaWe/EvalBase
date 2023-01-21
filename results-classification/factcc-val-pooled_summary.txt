@@ -1,0 +1,16 @@
+corr_metric              aspect  approach  model                                              score_name
+balanced_accuracy_score  human   new       bertscore-sentence-mnli-deberta-entail_contradict  P_03         0.767
+                                                                                              R_03         0.500
+                                                                                              F_03         0.500
+                                                                                              P_04         0.796
+                                                                                              R_04         0.500
+                                                                                              F_04         0.500
+                                                                                              P_05         0.801
+                                                                                              R_05         0.500
+                                                                                              F_05         0.500
+                                                                                              P_06         0.811
+                                                                                              R_06         0.500
+                                                                                              F_06         0.500
+                                                                                              P_07         0.832
+                                                                                              R_07         0.500
+                                                                                              F_07         0.500
