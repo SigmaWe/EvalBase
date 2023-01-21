@@ -2,6 +2,7 @@ import os
 import newsroom
 import realsumm
 import summeval
+import factcc
 
 
 path = os.path.dirname(os.path.abspath(__file__))

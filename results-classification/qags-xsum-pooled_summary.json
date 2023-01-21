@@ -1,0 +1,62 @@
+{
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_03')": {
+    "0": 0.6797729184,
+    "average": 0.6797729184
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_03')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_03')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_04')": {
+    "0": 0.6790370059,
+    "average": 0.6790370059
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_04')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_04')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_05')": {
+    "0": 0.6993622091,
+    "average": 0.6993622091
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_05')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_05')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_06')": {
+    "0": 0.6727642276,
+    "average": 0.6727642276
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_06')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_06')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_07')": {
+    "0": 0.6756027474,
+    "average": 0.6756027474
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_07')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_07')": {
+    "0": 0.5,
+    "average": 0.5
+  }
+}

@@ -1,3 +1,13 @@
+# PairFact source code for ACL submission
+
+To run:
+
+    pip3 install -r requirements.txt
+    python3 eval.py
+
+The results will be in the `results/` folder.
+
+
 # An evaluation framework for text-to-text generation tasks 
 
 EvalBase allow easy testing of new text-to-text generation metrics. A computerprogram or a machine learning model that can generate text from text is called a **system**. Such text-to-text generation tasks can be __summarization__, __translation__, or even __question answering__. Correspondingly, the systems for such tasks are called **summarizers**, **translators**, and **answer**. 
