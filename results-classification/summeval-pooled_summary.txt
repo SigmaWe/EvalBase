@@ -1,0 +1,25 @@
+corr_metric              aspect  approach  model                                              score_name
+balanced_accuracy_score  human   new       bertscore-sentence-mnli-deberta-entail_contradict  P_03         0.713
+                                                                                              R_03         0.500
+                                                                                              F_03         0.500
+                                                                                              P_04         0.719
+                                                                                              R_04         0.500
+                                                                                              F_04         0.500
+                                                                                              P_05         0.722
+                                                                                              R_05         0.500
+                                                                                              F_05         0.500
+                                                                                              P_06         0.723
+                                                                                              R_06         0.500
+                                                                                              F_06         0.500
+                                                                                              P_07         0.731
+                                                                                              R_07         0.500
+                                                                                              F_07         0.500
+                                                                                              P_08         0.728
+                                                                                              R_08         0.500
+                                                                                              F_08         0.500
+                                                                                              P_09         0.724
+                                                                                              R_09         0.500
+                                                                                              F_09         0.500
+                                                                                              P_095        0.703
+                                                                                              R_095        0.500
+                                                                                              F_095        0.500

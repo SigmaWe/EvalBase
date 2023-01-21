@@ -1,0 +1,98 @@
+{
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_03')": {
+    "0": 0.7130651539,
+    "average": 0.7130651539
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_03')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_03')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_04')": {
+    "0": 0.7194773938,
+    "average": 0.7194773938
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_04')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_04')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_05')": {
+    "0": 0.7222852559,
+    "average": 0.7222852559
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_05')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_05')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_06')": {
+    "0": 0.7232880637,
+    "average": 0.7232880637
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_06')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_06')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_07')": {
+    "0": 0.7314365939,
+    "average": 0.7314365939
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_07')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_07')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_08')": {
+    "0": 0.7281072718,
+    "average": 0.7281072718
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_08')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_08')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_09')": {
+    "0": 0.7238381755,
+    "average": 0.7238381755
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_09')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_09')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'P_095')": {
+    "0": 0.702876626,
+    "average": 0.702876626
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'R_095')": {
+    "0": 0.5,
+    "average": 0.5
+  },
+  "('balanced_accuracy_score', 'human', 'new', 'bertscore-sentence-mnli-deberta-entail_contradict', 'F_095')": {
+    "0": 0.5,
+    "average": 0.5
+  }
+}
