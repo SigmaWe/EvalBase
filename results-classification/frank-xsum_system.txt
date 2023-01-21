@@ -1,0 +1,55 @@
+corr_metric  aspect  approach  model                                              score_name
+pearsonr     human   new       bertscore-sentence-mnli-deberta-entail_contradict  P            0.307
+                                                                                  R            0.256
+                                                                                  F            0.031
+                                                                                  P_03         0.244
+                                                                                  R_03         0.120
+                                                                                  F_03         0.137
+                                                                                  P_04         0.236
+                                                                                  R_04         0.116
+                                                                                  F_04         0.133
+                                                                                  P_05         0.179
+                                                                                  R_05         0.165
+                                                                                  F_05         0.154
+                                                                                  P_06         0.177
+                                                                                  R_06         0.181
+                                                                                  F_06         0.141
+                                                                                  P_07         0.179
+                                                                                  R_07         0.189
+                                                                                  F_07         0.150
+kendalltau   human   new       bertscore-sentence-mnli-deberta-entail_contradict  P            0.246
+                                                                                  R            0.177
+                                                                                  F            0.094
+                                                                                  P_03         0.242
+                                                                                  R_03         0.093
+                                                                                  F_03         0.109
+                                                                                  P_04         0.234
+                                                                                  R_04         0.099
+                                                                                  F_04         0.121
+                                                                                  P_05         0.231
+                                                                                  R_05         0.134
+                                                                                  F_05         0.169
+                                                                                  P_06         0.231
+                                                                                  R_06         0.153
+                                                                                  F_06         0.156
+                                                                                  P_07         0.224
+                                                                                  R_07         0.172
+                                                                                  F_07         0.195
+spearmanr    human   new       bertscore-sentence-mnli-deberta-entail_contradict  P            0.314
+                                                                                  R            0.223
+                                                                                  F            0.117
+                                                                                  P_03         0.262
+                                                                                  R_03         0.099
+                                                                                  F_03         0.116
+                                                                                  P_04         0.251
+                                                                                  R_04         0.105
+                                                                                  F_04         0.128
+                                                                                  P_05         0.245
+                                                                                  R_05         0.141
+                                                                                  F_05         0.178
+                                                                                  P_06         0.243
+                                                                                  R_06         0.161
+                                                                                  F_06         0.164
+                                                                                  P_07         0.235
+                                                                                  R_07         0.180
+                                                                                  F_07         0.204
