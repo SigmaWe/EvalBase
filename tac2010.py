@@ -1,15 +1,17 @@
 # Running experiments in TAC 2010 
 
-import json
 import sys
 
 import pandas
 
 import evalbase
+import os
+import pickle
 
-sys.path.append("../SueNes/human/tac")
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "SueNes/human/tac"))
 import tac
-import os.path
+
+import env
 
 
 # 43 machine + 4 human summarizers per docsetID
@@ -59,6 +61,14 @@ def merge_article_summary_score(articles, summaries, scores, debug=False):
         counter += 1
         if debug and counter > 3:
             break
+
+    
+    # Set Pyramind to float
+    dataset_df["Pyramid"] = dataset_df["Pyramid"].astype(float)
+
+    # Set Linguistic and Overall to int
+    dataset_df["Linguistic"] = dataset_df["Linguistic"].astype(int)
+    dataset_df["Overall"] = dataset_df["Overall"].astype(int)
 
     return dataset_df
 
@@ -124,31 +134,57 @@ def load_tac(dataroot: str, debug=False):
     return dataset_df
 
 
-if __name__ == "__main__":
-
-    import pickle
-
-    debug = True
-
-    if debug:
-        dataset_df = pickle.load(open('tac_df.pkl', 'rb'))
-    else:
-        dataset_df = load_tac("/media/forrest/12T_EasyStore1/data/NLP/resources/TAC_DUC/TAC2010", debug=debug)
-        pickle.dump(dataset_df, open("tac_df.pkl", 'wb'))
-
-    import eval_util
+def main():
+    import eval_utils
 
     dataset_config = evalbase.datasets["tac2010"]
+    tac_df_path = os.path.join(evalbase.path, "dataloader/tac_df.pkl")
 
-    corr_df = eval_util.eval_summary_level(dataset_df, debug=debug, is_multi=True,
-                                           docID_column=dataset_config["docID_column"])
-    with pandas.option_context('display.max_rows', None,
-                               'display.max_columns', None,
-                               'display.precision', 3,
-                               ):
-        print(corr_df['average'])
+    if os.path.exists(tac_df_path):
+        dataset_df = pickle.load(open(tac_df_path, "rb"))
+    else:
+        dataset_df = load_tac(dataset_config["data_path"], debug=False)
+        pickle.dump(dataset_df, open(tac_df_path, "wb"))
 
-    with open(f"result_tac2010.json", 'w') as f:
-        json_ugly = corr_df.to_json(orient="index")
-        json_parsed = json.loads(json_ugly)
-        f.write(json.dumps(json_parsed, indent=2))
+    print("TAC2010 Summary-Level")
+    corr_df = eval_utils.eval_summary_level(
+        dataset_name="tac2010",
+        dataset_df=dataset_df,
+        exp_approaches=dataset_config["approaches"],
+        exp_models=env.metrics,
+        corr_metrics=env.corr_metrics,
+        document_column=dataset_config["document_column"],
+        docID_column=dataset_config["docID_column"],
+        system_summary_column=dataset_config["system_summary_column"],
+        reference_summary_column=dataset_config["reference_summary_column"],
+        human_metrics=dataset_config["human_metrics"],
+        debug=False,
+        is_multi=True
+    )
+    eval_utils.write_results(
+        simple_df=corr_df["average"],
+        detail_df=corr_df,
+        simple_path="results/tac2010_summary.txt",
+        detail_path="results/tac2010_summary.json"
+    )
+
+    print("TAC2010 System-Level")
+    corr_df = eval_utils.eval_system_level(
+        dataset_name="tac2010",
+        dataset_df=dataset_df,
+        exp_approaches=dataset_config["approaches"],
+        exp_models=env.metrics,
+        corr_metrics=env.corr_metrics,
+        document_column=dataset_config["document_column"],
+        docID_column=dataset_config["docID_column"],
+        system_summary_column=dataset_config["system_summary_column"],
+        reference_summary_column=dataset_config["reference_summary_column"],
+        human_metrics=dataset_config["human_metrics"],
+        debug=False,
+        is_multi=True
+    )
+    eval_utils.write_results(
+        simple_df=corr_df,
+        simple_path="results/tac2010_system.txt",
+        detail_path="results/tac2010_system.json"
+    )

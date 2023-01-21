@@ -2,6 +2,7 @@ import os
 import newsroom
 import realsumm
 import summeval
+import tac2010
 
 
 path = os.path.dirname(os.path.abspath(__file__))
@@ -49,6 +50,10 @@ datasets = {
     "tac2010": {
         "human_metrics": ["Pyramid", "Linguistic", "Overall"],
         "approaches": ["new"],
-        "docID_column": "docsetID"
+        "docID_column": "docsetID",
+        "document_column": "ArticleText",
+        "system_summary_column": "SystemSummary",
+        "reference_summary_column": "ReferenceSummary",
+        "data_path": "/TAC2010"
     }
 }

@@ -1,0 +1,3 @@
+[submodule "SueNes"]
+	path = SueNes
+	url = https://github.com/forrestbao/SueNes.git

@@ -96,13 +96,13 @@ def pool_multidoc(batch_df: pandas.DataFrame, result_df: pandas.DataFrame):
     # We do not use ignore_index below because it will otherwise reset multiindex column headers to 0 to N. 
     combined = pandas.concat([docsetID_and_System, result_df], axis=1)
 
-    combined_pooled = combined.groupby(['docsetID', 'System']).mean()
+    combined_pooled = combined.groupby(['docsetID', 'System']).mean(numeric_only=True)
     # combined_pooled = combined_pooled.drop(["index", 'docsetID', 'System'], axis=1)
 
     # Drop scores of the common summary
     human_scores = batch_df.drop(['ArticleText', 'ReferenceSummary',
                                   'SystemSummary'], axis=1)
-    human_scores = batch_df.groupby(['docsetID', 'System']).mean()
+    human_scores = human_scores.groupby(['docsetID', 'System']).mean(numeric_only=True)
 
     # print (batch_df_new.shape, combined_pooled.shape)
 
