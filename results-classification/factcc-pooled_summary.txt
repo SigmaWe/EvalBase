@@ -1,5 +1,53 @@
 corr_metric              aspect  approach  model                                              score_name
-balanced_accuracy_score  human   new       bertscore-sentence-mnli-deberta-entail_contradict  P_03         0.764
+balanced_accuracy_score  human   new       bertscore-sentence-mnli-roberta-entail_contradict  P_03         0.738
+                                                                                              R_03         0.500
+                                                                                              F_03         0.500
+                                                                                              P_04         0.744
+                                                                                              R_04         0.500
+                                                                                              F_04         0.500
+                                                                                              P_05         0.744
+                                                                                              R_05         0.500
+                                                                                              F_05         0.500
+                                                                                              P_06         0.745
+                                                                                              R_06         0.500
+                                                                                              F_06         0.500
+                                                                                              P_07         0.750
+                                                                                              R_07         0.500
+                                                                                              F_07         0.500
+                                                                                              P_08         0.747
+                                                                                              R_08         0.500
+                                                                                              F_08         0.500
+                                                                                              P_09         0.734
+                                                                                              R_09         0.500
+                                                                                              F_09         0.500
+                                                                                              P_095        0.705
+                                                                                              R_095        0.500
+                                                                                              F_095        0.500
+                                           bertscore-sentence-mnli-bart-entail_contradict     P_03         0.772
+                                                                                              R_03         0.500
+                                                                                              F_03         0.500
+                                                                                              P_04         0.774
+                                                                                              R_04         0.500
+                                                                                              F_04         0.500
+                                                                                              P_05         0.776
+                                                                                              R_05         0.500
+                                                                                              F_05         0.500
+                                                                                              P_06         0.777
+                                                                                              R_06         0.500
+                                                                                              F_06         0.500
+                                                                                              P_07         0.776
+                                                                                              R_07         0.500
+                                                                                              F_07         0.500
+                                                                                              P_08         0.764
+                                                                                              R_08         0.500
+                                                                                              F_08         0.500
+                                                                                              P_09         0.746
+                                                                                              R_09         0.500
+                                                                                              F_09         0.500
+                                                                                              P_095        0.697
+                                                                                              R_095        0.500
+                                                                                              F_095        0.500
+                                           bertscore-sentence-mnli-deberta-entail_contradict  P_03         0.764
                                                                                               R_03         0.500
                                                                                               F_03         0.500
                                                                                               P_04         0.775
@@ -14,3 +62,12 @@ balanced_accuracy_score  human   new       bertscore-sentence-mnli-deberta-entai
                                                                                               P_07         0.799
                                                                                               R_07         0.500
                                                                                               F_07         0.500
+                                                                                              P_08         0.806
+                                                                                              R_08         0.500
+                                                                                              F_08         0.500
+                                                                                              P_09         0.800
+                                                                                              R_09         0.500
+                                                                                              F_09         0.500
+                                                                                              P_095        0.787
+                                                                                              R_095        0.500
+                                                                                              F_095        0.500
