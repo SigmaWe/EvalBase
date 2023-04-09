@@ -42,9 +42,9 @@ datasets = {
         "docID_column": "id",
         "document_column": "ArticleText",
         "system_summary_column": "SystemSummary",
-        "reference_summary_column": "ReferenceSummary_0",  # the id ranges from 0 to 10
+        "reference_summary_column": "ReferenceSummary_0",  # the id ranges from 0 to 2
         "approaches": ["trad", "new"],
-        "data_path": "dataloader/summeval_annotations.aligned.paired.scored.jsonl"
+        "data_path": "dataloader/summeval_gptref.jsonl"
     },
     "tac2010": {
         "human_metrics": ["Pyramid", "Linguistic", "Overall"],

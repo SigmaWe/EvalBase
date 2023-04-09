@@ -5,6 +5,7 @@ import pandas
 
 import env
 
+NUM_REF = 3
 
 def clean_text(s: str):
     s = s.replace("\t", " ")
@@ -51,7 +52,7 @@ def load_summeval(paired_jsonl):
         # df.columns ==>
         # ['id', 'decoded', 'expert_annotations', 'turker_annotations',
         #    'references', 'model_id', 'filepath', 'metric_scores_1',
-        #    'metric_scores_6', 'metric_scores_11', 'text']
+        #    'metric_scores_6', 'metric_scores_11', 'text', 'GPTreferences']
 
         # process nested precalcualted metrics
         tdf = df['metric_scores_1'].to_list()
@@ -61,7 +62,7 @@ def load_summeval(paired_jsonl):
             del row['rouge']
         df = pandas.concat([df, pandas.DataFrame(tdf)], axis=1)
 
-        for refId in range(11):
+        for refId in range(NUM_REF):
             df[f"ReferenceSummary_{refId}"] = df["text"]  # place holder
         for human_metric in human_metrics:
             df[human_metric] = df["id"]  # place holder
@@ -70,8 +71,8 @@ def load_summeval(paired_jsonl):
         df = df.rename(columns={'decoded': 'SystemSummary', 'text': 'ArticleText', 'model_id': 'system'})
 
         for index, row in df.iterrows():
-            for refId in range(11):
-                df.at[index, f"ReferenceSummary_{refId}"] = clean_text(row["references"][refId])
+            for refId in range(NUM_REF):
+                df.at[index, f"ReferenceSummary_{refId}"] = clean_text(row["GPTreferences"][refId])
 
             pooled_human_ratings = pool_human_rating(row['expert_annotations'])
             for human_metric in human_metrics:
@@ -82,7 +83,7 @@ def load_summeval(paired_jsonl):
 
         df = df.drop(
             columns=['filepath', 'metric_scores_1', 'metric_scores_6', 'metric_scores_11', 'expert_annotations',
-                     'turker_annotations', 'references'])
+                     'turker_annotations', 'references', "GPTreferences"])
 
     return df
 
