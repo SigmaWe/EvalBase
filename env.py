@@ -43,7 +43,7 @@ datasets = {
         "document_column": "ArticleText",
         "system_summary_column": "SystemSummary",
         "reference_summary_column": "ReferenceSummary_0",  # the id ranges from 0 to 2
-        "approaches": ["trad", "new"],
+        "approaches": ["trad"],
         "data_path": "dataloader/summeval_gptref.jsonl"
     },
     "tac2010": {

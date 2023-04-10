@@ -5,7 +5,12 @@ import pandas
 
 import env
 
-NUM_REF = 3
+# NUM_REF = 3
+# REFERENCE_COLUMN = "GPTreferences"
+NUM_REF = 11
+REFERENCE_COLUMN = "references"
+
+
 
 def clean_text(s: str):
     s = s.replace("\t", " ")
@@ -72,7 +77,7 @@ def load_summeval(paired_jsonl):
 
         for index, row in df.iterrows():
             for refId in range(NUM_REF):
-                df.at[index, f"ReferenceSummary_{refId}"] = clean_text(row["GPTreferences"][refId])
+                df.at[index, f"ReferenceSummary_{refId}"] = clean_text(row[REFERENCE_COLUMN][refId])
 
             pooled_human_ratings = pool_human_rating(row['expert_annotations'])
             for human_metric in human_metrics:
