@@ -6,6 +6,8 @@ import pandas
 
 import env
 
+REFERENCE_COLUMN = "ref_summ_gpt"
+# REFERENCE_COLUMN = "ref_summ"
 
 def clean_text(s: str):
     """Clean up the text in doc or summ in RealSumm dataset
@@ -79,7 +81,7 @@ def load_realsumm(pickfile: str):
     for sample in sd.values():
         doc_id = sample['doc_id']
         doc = used_articles[doc_id]
-        ref_summ = sample['ref_summ']
+        ref_summ = sample[REFERENCE_COLUMN][0]
         for sys_name in sample['system_summaries']:
             sys_summ = sample['system_summaries'][sys_name]['system_summary']
             score_dict = sample['system_summaries'][sys_name]['scores']

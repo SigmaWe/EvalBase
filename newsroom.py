@@ -14,6 +14,8 @@ from tqdm.auto import tqdm
 import env
 import os.path
 
+NUM_REF = 3
+REFERENCE_COLUMN = "GPTReferenceSummary"
 
 def clean_text(s: str):
     """Clean up the text in doc or summ in newsroom dataset
@@ -123,13 +125,22 @@ def append_reference_summaries_to_newsroom_human_evaluation(
 
     df["ReferenceSummary"] = df["ArticleTitle"].map(title2ref)
 
+    df[REFERENCE_COLUMN] = df[REFERENCE_COLUMN].map(eval)
+
+    for refId in range(NUM_REF):
+            df[f"ReferenceSummary_{refId}"] = df["ArticleTitle"]  # place holder
+
+    for index, row in df.iterrows():
+        for refId in range(NUM_REF):
+            df.at[index, f"ReferenceSummary_{refId}"] = clean_text(row[REFERENCE_COLUMN][refId])
+
     # 4. Dump the DF with Reference Summaries to a new CSV file 
     if dump_csv != "":
         df.to_csv(dump_csv,
                   index=False,
                   # FIXME: I am not sure about the three options below
                   # Need to use the same settings when loading dumpped CSV.
-                  escapechar="\\")
+                  )
 
     return df
 
@@ -175,10 +186,10 @@ def pool_human_rating(
 
     if pool_method == "mean":
         df = df.groupby(
-            by=["ArticleID", "System", "ArticleText", "SystemSummary", "ReferenceSummary"]).mean().reset_index()
+            by=["ArticleID", "System", "ArticleTitle", "ArticleText", "SystemSummary", "ReferenceSummary", REFERENCE_COLUMN, "ReferenceSummary_0", "ReferenceSummary_1", "ReferenceSummary_2"]).mean().reset_index()
     elif pool_method == "median":
         df = df.groupby(
-            by=["ArticleID", "System", "ArticleText", "SystemSummary", "ReferenceSummary"]).median().reset_index()
+            by=["ArticleID", "System", "ArticleTitle", "ArticleText", "SystemSummary", "ReferenceSummary", REFERENCE_COLUMN, "ReferenceSummary_0", "ReferenceSummary_1", "ReferenceSummary_2"]).median().reset_index()
     else:
         print("Wrong consensus method")
         exit()

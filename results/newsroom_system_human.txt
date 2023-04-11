@@ -1,0 +1,97 @@
+corr_metric  aspect                 approach  model      score_name
+pearsonr     InformativenessRating  trad      bleurt     scores       0.385
+                                              rouge      rouge1       0.368
+                                                         rouge2       0.414
+                                                         rougeL       0.359
+                                                         rougeLsum    0.359
+                                              bertscore  precision    0.511
+                                                         recall       0.285
+                                                         f1           0.430
+             RelevanceRating        trad      bleurt     scores       0.300
+                                              rouge      rouge1       0.337
+                                                         rouge2       0.352
+                                                         rougeL       0.328
+                                                         rougeLsum    0.328
+                                              bertscore  precision    0.487
+                                                         recall       0.301
+                                                         f1           0.430
+             CoherenceRating        trad      bleurt     scores       0.210
+                                              rouge      rouge1       0.289
+                                                         rouge2       0.279
+                                                         rougeL       0.239
+                                                         rougeLsum    0.239
+                                              bertscore  precision    0.407
+                                                         recall       0.149
+                                                         f1           0.298
+             FluencyRating          trad      bleurt     scores       0.102
+                                              rouge      rouge1       0.195
+                                                         rouge2       0.188
+                                                         rougeL       0.148
+                                                         rougeLsum    0.148
+                                              bertscore  precision    0.348
+                                                         recall       0.149
+                                                         f1           0.269
+kendalltau   InformativenessRating  trad      bleurt     scores       0.273
+                                              rouge      rouge1       0.248
+                                                         rouge2       0.295
+                                                         rougeL       0.247
+                                                         rougeLsum    0.247
+                                              bertscore  precision    0.347
+                                                         recall       0.178
+                                                         f1           0.271
+             RelevanceRating        trad      bleurt     scores       0.200
+                                              rouge      rouge1       0.252
+                                                         rouge2       0.289
+                                                         rougeL       0.253
+                                                         rougeLsum    0.253
+                                              bertscore  precision    0.332
+                                                         recall       0.203
+                                                         f1           0.289
+             CoherenceRating        trad      bleurt     scores       0.152
+                                              rouge      rouge1       0.208
+                                                         rouge2       0.224
+                                                         rougeL       0.174
+                                                         rougeLsum    0.174
+                                              bertscore  precision    0.281
+                                                         recall       0.099
+                                                         f1           0.192
+             FluencyRating          trad      bleurt     scores       0.111
+                                              rouge      rouge1       0.167
+                                                         rouge2       0.170
+                                                         rougeL       0.136
+                                                         rougeLsum    0.136
+                                              bertscore  precision    0.293
+                                                         recall       0.122
+                                                         f1           0.217
+spearmanr    InformativenessRating  trad      bleurt     scores       0.399
+                                              rouge      rouge1       0.368
+                                                         rouge2       0.416
+                                                         rougeL       0.360
+                                                         rougeLsum    0.360
+                                              bertscore  precision    0.505
+                                                         recall       0.248
+                                                         f1           0.392
+             RelevanceRating        trad      bleurt     scores       0.301
+                                              rouge      rouge1       0.359
+                                                         rouge2       0.393
+                                                         rougeL       0.358
+                                                         rougeLsum    0.358
+                                              bertscore  precision    0.474
+                                                         recall       0.276
+                                                         f1           0.404
+             CoherenceRating        trad      bleurt     scores       0.239
+                                              rouge      rouge1       0.313
+                                                         rouge2       0.317
+                                                         rougeL       0.269
+                                                         rougeLsum    0.269
+                                              bertscore  precision    0.410
+                                                         recall       0.139
+                                                         f1           0.290
+             FluencyRating          trad      bleurt     scores       0.154
+                                              rouge      rouge1       0.263
+                                                         rouge2       0.250
+                                                         rougeL       0.208
+                                                         rougeLsum    0.208
+                                              bertscore  precision    0.434
+                                                         recall       0.172
+                                                         f1           0.325
