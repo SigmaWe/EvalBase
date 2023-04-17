@@ -1,10 +1,8 @@
-import json
-import typing
+import json, typing, os
 
 import pandas
 
-import env
-import evalbase
+# import evalbase
 
 
 def clean_text(s: str):
@@ -94,64 +92,79 @@ def load_summeval(paired_jsonl):
     #  {'coherence': 2, 'consistency': 5, 'fluency': 5, 'relevance': 3}]
 
 
-def main():
-    dataset_config = evalbase.datasets["summeval"]
-    dataset_df = load_summeval(dataset_config["data_path"])
-
-    precalc_metrics = [  # keys from original SummEval json file
-        'rouge_1_precision', 'rouge_1_recall', 'rouge_1_f_score',
-        'rouge_2_precision', 'rouge_2_recall', 'rouge_2_f_score',
-        'rouge_l_precision', 'rouge_l_recall', 'rouge_l_f_score',
-        'rouge_we_1_p', 'rouge_we_1_r', 'rouge_we_1_f',
-        'rouge_we_2_p', 'rouge_we_2_r', 'rouge_we_2_f',
-        'meteor', 'cider', 's3_pyr', 's3_resp',
-        'mover_score', 'sentence_movers_glove_sms', 'bleu',
-        'bert_score_precision', 'bert_score_recall', 'bert_score_f1',
-        'blanc', 'summaqa_avg_prob', 'summaqa_avg_fscore', 'supert']
+def main(exp_config: dict):
+    dataset_name = exp_config["dataset_name"]
+    dataset_df = load_summeval(exp_config["data_path"])
 
     import eval_utils
 
-    print("SummEval Summary-Level")
-    corr_df = eval_utils.eval_summary_level(
-        dataset_name="summeval",
-        dataset_df=dataset_df,
-        exp_approaches=dataset_config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=dataset_config["document_column"],
-        docID_column=dataset_config["docID_column"],
-        system_summary_column=dataset_config["system_summary_column"],
-        reference_summary_column=dataset_config["reference_summary_column"],
-        human_metrics=dataset_config["human_metrics"],
-        pre_calculated_metrics=precalc_metrics,
-        debug=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df['average'],
-        detail_df=corr_df,
-        simple_path="results/summeval_summary.txt",
-        detail_path="results/summeval_summary.json"
-    )
+    # TODO: Move the code below into one function under eval_utils.py
+    for eval_level in exp_config["eval_levels"]:  
+        if eval_level == "summary":
+            eval_fn = eval_utils.eval_summary_level
+        elif eval_level == "system":
+            eval_fn = eval_utils.eval_system_level
 
-    print("SummEval System-Level")
-    corr_df = eval_utils.eval_system_level(
-        dataset_name="summeval",
-        dataset_df=dataset_df,
-        exp_approaches=dataset_config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=dataset_config["document_column"],
-        docID_column=dataset_config["docID_column"],
-        system_summary_column=dataset_config["system_summary_column"],
-        reference_summary_column=dataset_config["reference_summary_column"],
-        human_metrics=dataset_config["human_metrics"],
-        pre_calculated_metrics=precalc_metrics,
-        debug=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df,
-        simple_path="results/summeval_system.txt",
-        detail_path="results/summeval_system.json"
-    )
+        print(f"{dataset_name} at {eval_level.capitalize()} Level")
+        
+        corr_df = eval_utils.eval_summary_level(
+            dataset_name=dataset_name,
+            dataset_df=dataset_df,
+            exp_approaches=exp_config["approaches"],
+            exp_models=exp_config["nlg_metrics"],
+            corr_metrics=exp_config["corr_metrics"],
+            document_column=exp_config["document_column"],
+            docID_column=exp_config["docID_column"],
+            system_summary_column=exp_config["system_summary_column"],
+            reference_summary_column=exp_config["reference_summary_column"],
+            human_metrics=exp_config["human_metrics"],
+            pre_calculated_metrics=exp_config["precalc_metrics"],
+            debug=False
+        )
+        eval_utils.write_results(
+            simple_df=corr_df['average'],
+            detail_df=corr_df,
+            simple_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.txt"), 
+            detail_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.json"), 
+        )
 
-    print("SummEval System-Level")
+
+if __name__ == "__main__":
+    import os, functools
+
+    exp_config = {
+        # about the dataset and dataframe 
+        "dataset_name": "summeval",
+        "human_metrics": ["consistency", "relevance", "coherence", "fluency"],
+        "docID_column": "id",
+        "document_column": "ArticleText",
+        "system_summary_column": "SystemSummary",
+        "reference_summary_column": "ReferenceSummary_0",  # the id ranges from 0 to 10
+        # about the experiments 
+        "nlg_metrics" : {
+            "bleurt": evaluate.load('bleurt', config_name='BLEURT-20', module_type='metric').compute,
+            "rouge":  functools.partial(evaluate.load("rouge").compute,  use_aggregator=False),
+            "bertscore":  functools.partial(evaluate.load("bertscore").compute, lang='en', use_fast_tokenizer=True),
+        }, 
+        "corr_metrics" : ["spearman", "pearson", "kendalltau"], 
+        "approaches": ["trad", "new"],
+        "eval_levels": ["summary", "system"],
+        "data_path": os.path.join(path, "dataloader/summeval_annotations.aligned.paired.scored.jsonl"),
+        "result_path_root": "./results/",
+        "precal_metrics": [  # keys from original SummEval json file
+            'rouge_1_precision', 'rouge_1_recall', 'rouge_1_f_score',
+            'rouge_2_precision', 'rouge_2_recall', 'rouge_2_f_score',
+            'rouge_l_precision', 'rouge_l_recall', 'rouge_l_f_score',
+            'rouge_we_1_p', 'rouge_we_1_r', 'rouge_we_1_f',
+            'rouge_we_2_p', 'rouge_we_2_r', 'rouge_we_2_f',
+            'meteor', 'cider', 's3_pyr', 's3_resp',
+            'mover_score', 'sentence_movers_glove_sms', 'bleu',
+            'bert_score_precision', 'bert_score_recall', 'bert_score_f1',
+            'blanc', 'summaqa_avg_prob', 'summaqa_avg_fscore', 'supert']
+    }
+
+    summeval_exp(exp_config)

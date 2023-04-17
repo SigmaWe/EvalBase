@@ -4,7 +4,6 @@ import typing
 
 import pandas
 
-import env
 import evalbase
 import os
 
@@ -71,6 +70,7 @@ def load_realsumm(pickfile: str):
                     6094, 6976, 7626, 8306, 9086, 9605, 10563, 11264, 1492, 2292, 3621, 4725, 5257, 5558, 6329, 7058,
                     7670, 8312, 9221, 9709]
     cnndm_test_articles = []
+    # FIXME: This is cyclic import 
     with open(os.path.join(evalbase.path, "dataloader/src.txt"), "r", encoding="utf-8") as f:
         cnndm_test_articles = list(f)
 
@@ -104,57 +104,43 @@ def load_realsumm(pickfile: str):
     return dataset_df
 
 
-def main(system_type: typing.Literal["ext", "abs"]):
-    dataset_config = evalbase.datasets[f"realsumm_{system_type}"]
-    dataset_df = load_realsumm(dataset_config["data_path"])
+def main(exp_config):
+    dataset_name = exp_config["dataset_name"]
+    dataset_df = load_realsumm(exp_config["data_path"])
 
-    import eval_utils 
+    import eval_utils
 
-    print(f"RealSumm {system_type} Summary-Level")
-    corr_df = eval_utils.eval_summary_level(
-        dataset_name="realsumm",
-        dataset_df=dataset_df,
-        exp_approaches=dataset_config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=dataset_config["document_column"],
-        docID_column=dataset_config["docID_column"],
-        system_summary_column=dataset_config["system_summary_column"],
-        reference_summary_column=dataset_config["reference_summary_column"],
-        human_metrics=dataset_config["human_metrics"],
-        pre_calculated_metrics=['rouge_1_f_score', 'rouge_2_recall', 'rouge_l_recall', 'rouge_2_precision',
-                                'rouge_2_f_score', 'rouge_1_precision', 'rouge_1_recall', 'rouge_l_precision',
-                                'rouge_l_f_score', 'js-2', 'mover_score', 'bert_recall_score', 'bert_precision_score',
-                                'bert_f_score'],
-        debug=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df['average'],
-        detail_df=corr_df,
-        simple_path=f"results/realsumm_{system_type}_summary.txt",
-        detail_path=f"results/realsumm_{system_type}_summary.json"
-    )
+    # TODO: Move the code below into one function under eval_utils.py
+    for eval_level in exp_config["eval_levels"]:  
+        if eval_level == "summary":
+            eval_fn = eval_utils.eval_summary_level
+        elif eval_level == "system":
+            eval_fn = eval_utils.eval_system_level
 
-    print(f"RealSumm {system_type} System-Level")
-    corr_df = eval_utils.eval_system_level(
-        dataset_name="realsumm",
-        dataset_df=dataset_df,
-        exp_approaches=dataset_config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=dataset_config["document_column"],
-        docID_column=dataset_config["docID_column"],
-        system_summary_column=dataset_config["system_summary_column"],
-        reference_summary_column=dataset_config["reference_summary_column"],
-        human_metrics=dataset_config["human_metrics"],
-        pre_calculated_metrics=['rouge_1_f_score', 'rouge_2_recall', 'rouge_l_recall', 'rouge_2_precision',
-                                'rouge_2_f_score', 'rouge_1_precision', 'rouge_1_recall', 'rouge_l_precision',
-                                'rouge_l_f_score', 'js-2', 'mover_score', 'bert_recall_score', 'bert_precision_score',
-                                'bert_f_score'],
-        debug=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df,
-        simple_path=f"results/realsumm_{system_type}_system.txt",
-        detail_path=f"results/realsumm_{system_type}_system.json"
-    )
+        print(f"{dataset_name} at {eval_level.capitalize()} Level")
+        
+        corr_df = eval_utils.eval_summary_level(
+            dataset_name=dataset_name,
+            dataset_df=dataset_df,
+            exp_approaches=exp_config["approaches"],
+            exp_models=exp_config["nlg_metrics"],
+            corr_metrics=exp_config["corr_metrics"],
+            document_column=exp_config["document_column"],
+            docID_column=exp_config["docID_column"],
+            system_summary_column=exp_config["system_summary_column"],
+            reference_summary_column=exp_config["reference_summary_column"],
+            human_metrics=exp_config["human_metrics"],
+            pre_calculated_metrics=exp_config["precalc_metrics"],
+            debug=False
+        )
+        eval_utils.write_results(
+            simple_df=corr_df['average'],
+            detail_df=corr_df,
+            simple_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.txt"), 
+            detail_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.json"), 
+        )
+        

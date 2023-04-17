@@ -1,27 +1,29 @@
 # An evaluation framework for text-to-text generation tasks 
 
-EvalBase allow easy testing of new text-to-text generation metrics. A computerprogram or a machine learning model that can generate text from text is called a **system**. Such text-to-text generation tasks can be __summarization__, __translation__, or even __question answering__. Correspondingly, the systems for such tasks are called **summarizers**, **translators**, and **answer**. 
+EvalBase allow easy testing of new text-to-text generation metrics. A computer program or a machine learning model that can generate text from text is called a **system**. Such text-to-text generation tasks can be __summarization__, __translation__, or even __question answering__. Correspondingly, the systems for such tasks are called **summarizers**, **translators**, and **answer**. 
 
 There are usually two approaches to text-to-text generation: reference-based and reference-free. For each sample in a test set, a **reference-based** approach first let a human do the same task to produce a **reference** and then compares a machine/system-generated output against the reference, while **reference-free** approaches directly scores the generated text with respect to the input text. 
 
 ## Usage 
 
-EvalBase works with both reference-free and reference-based metrics. 
-It automatically evaluates metrics specified in the configuration file `env.py` on several human evaluation datasets for summarization. As long as the files are in respected locations, you don't have to worry about loading the test data and getting human ratings from them. 
+For each dataset that EvalBase supports, a `main()` function is provided. 
+So to use EvalBase, simply add EvalBase into your `$PYTHONPATH` environment variable, and then
+call the `main()` function with the proper argument which is a dictionary of configurations. 
+See [`run_exp.py`](./run_exp.py) to see the configurations and how to call the `main()` function. For how to add new metrics, see [this section](./#adding-your-new-metrics-into-the-test). 
 
 ### Getting and preparing dataset files
 
 **All** dataset files and their processing scripts must be **under `dataloader` folder**.
 
-* SummEval: Go to `dataloader` and run `summeval_build.sh`
-* Realsumm: Go to `dataloader` and run `realsumm_build.sh` 
-* Newsroom: Go to `dataloader` and do the follows. 
+* SummEval: Run `summeval_build.sh`
+* Realsumm: Run `realsumm_build.sh` 
+* Newsroom: 
   - Download `newsroom-human-eval.csv`, the human evaluation result, including documents and system summaries but no reference summaries:
     ```shell
     wget https://github.com/lil-lab/newsroom/raw/master/humaneval/newsroom-human-eval.csv
     ```
   - Get `test.jsonl`, the test split of Newsroom, containing reference summaries. No automatic script. You will have to fill out a web form [here](https://lil.nlp.cornell.edu/newsroom/download/index.html) and then follow the link in your email to download. `test.jsonl` is in the downloaded tar ball. 
-* TAC: We assume that you have fully recursively extracted the two files. **NOT needed for ISU CS 579X**
+* TAC: We assume that you have fully recursively extracted the two files. 
   - [`GuidedSumm2010_eval.tgz`](https://tac.nist.gov/protected/past-aquaint-aquaint2/2010/GuidedSumm2010_eval.tgz
 ) Downloadable from web, containing human evaluation results and system summaries. 
   - `TAC2010_Summarization_Documents.tgz` Emailed by NIST, containing the documents for which summaries are generated and rated. 
@@ -31,15 +33,15 @@ It automatically evaluates metrics specified in the configuration file `env.py` 
 Once you have the files above, you can run the evaluations: 
 
 ```shell
-bash experiments.sh
+python3 run_exp.py
 ```
 
 ### Where are the results? 
 
-All under `results` folder. 
+By default, all under `results` folder. Or you can modify the `result_path_root` in the configuration dictionary passes to the `main()` function for a dataset.
 
 ### Adding your new metrics into the test
-Just add your metric as an entry into the `metrics` dictionary (keys are metric names as strings while values are functions -- see below) in `env.py`.
+Just add your metric as an entry into the `NLG_metrics` dictionary (keys are metric names as strings while values are functions -- see below) in the configuration dictionary.
 
 Each metric function must follow the I/O of HuggingFace's [the BERTScore function](https://huggingface.co/spaces/evaluate-metric/bertscore) in the `evaluate` library: 
 * Two must-have positional arguments:
@@ -47,22 +49,16 @@ Each metric function must follow the I/O of HuggingFace's [the BERTScore functio
   - the input text (in ref-free mode) or the reference (in ref-based mode), as a `List[str]`.
 * Return must be a dictionary of type `dict[str, List[float]]`, e.g., `{'precision': [0.5, 0.6], 'recall': [0.7, 0.8], 'f1': [0.9, 0.75]}`. 
 
-### GPU
-
-There are memory leaks when using GPUs. So, please disable GPUs: 
-```shell
-export CUDA_VISIBLE_DEVICES=''
-```
 
 ## File structures/functions
-* `env.py`: configurations of experimental settings. Add your own metrics here.
 * `eval_utils.py`: scoring summaries using automated metrics and computing their correlations with human scores
   - `eval_summary_level`: the main function that does summary-level evaluation. It loads a `dataset_df` (see specifications below).
   - `eval_system_level`: **To be finished by those taking CS 579X**
-* `exp.sh`: Running all the exeriments. The shell script calles the following three Python scripts: 
+* Dataloader and evaluation scripts for each dataset: 
   - `newsroom.py`: Run experiments on Newsroom dataset
   - `realsumm.py`: Run experiments on realsumm dataset
   - `summeval.py`: Run experiments on SummEval dataset
+  - `tac2010.py`: Run experiments on tac2010 dataset
 
 
 ## Key `Pandas.DataFrame`s in `eval.py`
