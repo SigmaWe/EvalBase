@@ -203,6 +203,7 @@ def df_to_nested_dict(df: pandas.DataFrame) -> dict:
 
 def main(exp_config:dict):
     human_evaluation_csv_with_refs = exp_config["human_eval_w_refs_path"]
+    print (human_evaluation_csv_with_refs)
 
     if os.path.exists(human_evaluation_csv_with_refs):
         print("Loading data...")
