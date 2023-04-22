@@ -1,4 +1,4 @@
-import eval_utils
+from eval_utils import eval_and_write
 import numpy as np
 import os
 import pandas
@@ -6,12 +6,8 @@ import json
 from tqdm import tqdm
 
 import json
-import typing
 
 import pandas
-
-import env
-import evalbase
 
 
 # factCC
@@ -105,137 +101,35 @@ def load_qags(filepath):
     return df
 
 
-def eval_summary_level(dataset_df, config):
-    print(f"{config['name']} Summary-Level")
-    # check if results already exist
-    if os.path.exists(f"results/{config['name']}_summary.json"):
-        print("already existed, return")
-        return
-    corr_df = eval_utils.eval_summary_level(
-        dataset_name=config['name'],
-        dataset_df=dataset_df,
-        exp_approaches=config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=config["document_column"],
-        docID_column=config["docID_column"],
-        system_summary_column=config["system_summary_column"],
-        reference_summary_column=config["reference_summary_column"],
-        human_metrics=config["human_metrics"],
-        # pre_calculated_metrics=precalc_metrics,
-        debug=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df['average'],
-        detail_df=corr_df,
-        simple_path=f"results/{config['name']}_summary.txt",
-        detail_path=f"results/{config['name']}_summary.json"
-    )
-
-
-def eval_system_level(dataset_df, config):
-    print(f"{config['name']} System-Level")
-    # check if results already exist
-    if os.path.exists(f"results/{config['name']}_system.json"):
-        print("already existed, return")
-        return
-    corr_df = eval_utils.eval_system_level(
-        dataset_name=config['name'],
-        dataset_df=dataset_df,
-        exp_approaches=config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=config["document_column"],
-        docID_column=config["docID_column"],
-        system_summary_column=config["system_summary_column"],
-        reference_summary_column=config["reference_summary_column"],
-        human_metrics=config["human_metrics"],
-        # pre_calculated_metrics=precalc_metrics,
-        debug=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df,
-        simple_path=f"results/{config['name']}_system.txt",
-        detail_path=f"results/{config['name']}_system.json"
-    )
-
-    print("End")
-
-
 ####################
 # The main functions
 
-def factCC_main():
-    DATA_ROOT = "/home/hebi/git/factRel/data/dataset/"
-    FACTCC_PATH = os.path.join(
-        DATA_ROOT, "factCC/data_pairing/data/generated_data/data-clipped")
-
-    FACTCC_SPLIT = {
-        "train": "data-train.jsonl",
-        "dev": "data-dev.jsonl",
-        "test": "data-test.jsonl"
-    }
-    config = {
-        'human_metrics': ['human'],
-        'docID_column': 'id',
-        'document_column': 'doc',
-        'system_summary_column': 'sum',
-        # FIXME only one summary is available
-        'reference_summary_column': 'sum',
-        'approaches': ['new'],
-    }
+def factCC_main(exp_config: dict):
+    FACTCC_PATH = exp_config["data_path"]
+    FACTCC_SPLIT = exp_config["split"]
     # TODO load the other splits.
     filepath = os.path.join(FACTCC_PATH, FACTCC_SPLIT["test"])
     df = load_factcc(filepath)
-    eval_system_level(df, {**config, "name": "factcc"})
-    eval_summary_level(
-        df, {**config, "name": "factcc-pooled", "docID_column": "id0"})
+    eval_and_write("factcc", df, {**exp_config, "eval_levels": ["system"]})
+    eval_and_write("factcc-pooled", df, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})
 
 
-def frank_main():
-    DATA_ROOT = "/home/hebi/git/factRel/data/dataset/"
-    FRANK_FOLDER = os.path.join(DATA_ROOT, 'frank/data')
-    FRANK_DATA = 'benchmark_data.json'
-    FRANK_ANNOTATION = 'human_annotations.json'
+def frank_main(exp_config: dict):
+    FRANK_PATH = exp_config["data_path"]
 
-    config = {
-        'human_metrics': ['human'],
-        'docID_column': 'id',
-        'document_column': 'doc',
-        'system_summary_column': 'sum',
-        'reference_summary_column': 'ref',
-        'approaches': ['new'],
-    }
-    cnndm, xsum = load_frank(os.path.join(FRANK_FOLDER, FRANK_DATA),
-                             os.path.join(FRANK_FOLDER, FRANK_ANNOTATION))
-    # System level
-    eval_system_level(cnndm, {**config, 'name': 'frank-cnndm'})
-    eval_system_level(xsum, {**config, 'name': 'frank-xsum'})
-    # Summary level
-    eval_summary_level(cnndm, {**config, 'name': 'frank-cnndm'})
-    eval_summary_level(xsum, {**config, 'name': 'frank-xsum'})
+    cnndm, xsum = load_frank(os.path.join(FRANK_PATH, "benchmark_data.json"),
+                             os.path.join(FRANK_PATH, "human_annotations.json"))
+    eval_and_write("frank-cnndm", cnndm, exp_config)
+    eval_and_write("frank-xsum", xsum, exp_config)
 
 
-def qags_main():
+def qags_main(exp_config: dict):
     # TODO parameterize the path
-    DATA_ROOT = "/home/hebi/git/factRel/data/dataset/"
-    QGAS_FOLDER = os.path.join(DATA_ROOT, "qags/data")
-    QGAS_FILES = ["mturk_cnndm.jsonl", "mturk_xsum.jsonl"]
-    config = {
-        'human_metrics': ['human'],
-        'docID_column': 'id',
-        'document_column': 'doc',
-        'system_summary_column': 'sum',
-        # FIXME only one summary is available
-        'reference_summary_column': 'sum',
-        'approaches': ['new'],
-    }
-    cnndm = load_qags(os.path.join(QGAS_FOLDER, "mturk_cnndm.jsonl"))
-    xsum = load_qags(os.path.join(QGAS_FOLDER, "mturk_xsum.jsonl"))
+    QGAS_PATH = exp_config["data_path"]
+    cnndm = load_qags(os.path.join(QGAS_PATH, "mturk_cnndm.jsonl"))
+    xsum = load_qags(os.path.join(QGAS_PATH, "mturk_xsum.jsonl"))
     # DEBUG using part of the data
-    eval_system_level(cnndm, {**config, "name": "qags-cnndm"})
-    eval_system_level(xsum, {**config, "name": "qags-xsum"})
-    eval_summary_level(
-        cnndm, {**config, "name": "qags-cnndm-pooled", "docID_column": "id0"})
-    eval_summary_level(
-        xsum, {**config, "name": "qags-xsum-pooled", "docID_column": "id0"})
+    eval_and_write("qags-cnndm", cnndm, {**exp_config, "eval_levels": ["system"]})
+    eval_and_write("qags-xsum", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["system"]})
+    eval_and_write("qaqs-cnndm-pooled", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})
+    eval_and_write("qags-xsum-pooled", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})

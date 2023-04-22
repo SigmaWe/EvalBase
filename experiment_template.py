@@ -109,3 +109,55 @@ tac2010_config = {
 tac2010_config.update(common_exp_config)
 evalbase.tac2010.main(tac2010_config)
 ### End of example for the TAC 2010 dataset ###
+
+### Example configurations for the QAGS dataset ###
+print("factcc.qags_main(), size: 235")
+qags_config = {
+    "human_metrics": ["human"],
+    "docID_column": "id",
+    "document_column": "doc",
+    "system_summary_column": "sum",
+    # FIXME only one summary is available
+    "reference_summary_column": "sum",
+    "approaches": ["new"],
+    "data_path": os.path.join(evalbase.path, "dataloader/qags/data")
+}
+qags_config.update(common_exp_config)
+evalbase.factcc.qags_main(qags_config)
+### End of example for the QAGS dataset ###
+
+### Example configurations for the Frank dataset ###
+print("factcc.frank_main(): size: 1250")
+frank_config = {
+    "human_metrics": ["human"],
+    "docID_column": "id",
+    "document_column": "doc",
+    "system_summary_column": "sum",
+    "reference_summary_column": "ref",
+    "approaches": ["new"],
+    "data_path": os.path.join(evalbase.path, "dataloader/frank/data")
+}
+frank_config.update(common_exp_config)
+evalbase.factcc.frank_main(frank_config)
+### End of example for the Frank dataset ###
+
+### Example configurations for the FastCC dataset ###
+print("factcc.factCC_main(): size: large")
+fastcc_config = {
+    "human_metrics": ["human"],
+    "docID_column": "id",
+    "document_column": "doc",
+    "system_summary_column": "sum",
+    # FIXME only one summary is available
+    "reference_summary_column": "sum",
+    "approaches": ["new"],
+    "split": {
+        "train": "data-train.jsonl",
+        "dev": "data-dev.jsonl",
+        "test": "data-test.jsonl"
+    },
+    "data_path": os.path.join(evalbase.path, "dataloader/factCC/data_pairing/data/generated_data/data-clipped")
+}
+fastcc_config.update(common_exp_config)
+evalbase.factcc.factCC_main(fastcc_config)
+### End of example for the FastCC dataset ###

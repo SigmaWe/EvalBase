@@ -1,13 +1,3 @@
-# PairFact source code for ACL submission
-
-To run:
-
-    pip3 install -r requirements.txt
-    python3 eval.py
-
-The results will be in the `results/` folder.
-
-
 # An evaluation framework for text-to-text generation tasks 
 
 EvalBase allow easy testing of new text-to-text generation metrics. A computer program or a machine learning model that can generate text from text is called a **system**. Such text-to-text generation tasks can be __summarization__, __translation__, or even __question answering__. Correspondingly, the systems for such tasks are called **summarizers**, **translators**, and **answer**. 
@@ -85,6 +75,5 @@ Please read more details of such variables in the docstrings/comments inside `ev
 
    2. `batch_result_df`: Each row corresponds to a sample and each column corresponds to a MultiIndex `(approach, model, score_name)`. `score_name` is a variant of a `model`, for example, ROUGE-1 is a `score_name` for ROUGE which is a `model`. 
 3. `corr_df`: The correlation coefficient dataframe, the last column which is like 
-
 
 

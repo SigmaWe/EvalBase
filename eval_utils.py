@@ -2,6 +2,7 @@ import evaluate
 import pandas
 import scipy
 import json
+import os
 
 import typing
 from tqdm.auto import tqdm
@@ -225,6 +226,43 @@ def eval_system_level(
 
     corr_df = batched_corr(corr_df, overall_human_scores, overall_batch_result_df, corr_metrics, 0)[0]
     return corr_df
+
+
+def eval_and_write(dataset_name, dataset_df, exp_config):
+    for eval_level in exp_config["eval_levels"]:
+        if eval_level == "summary":
+            eval_fn = eval_summary_level
+        elif eval_level == "system":
+            eval_fn = eval_system_level
+        else:
+            raise NotImplementedError(f"Unknown eval_level: {eval_level}")
+
+        print(f"{dataset_name} at {eval_level.capitalize()} Level")
+
+        corr_df = eval_fn(
+            dataset_name=dataset_name,
+            dataset_df=dataset_df,
+            exp_approaches=exp_config["approaches"],
+            exp_models=exp_config["nlg_metrics"],
+            corr_metrics=exp_config["corr_metrics"],
+            document_column=exp_config["document_column"],
+            docID_column=exp_config["docID_column"],
+            system_summary_column=exp_config["system_summary_column"],
+            reference_summary_column=exp_config["reference_summary_column"],
+            human_metrics=exp_config["human_metrics"],
+            pre_calculated_metrics=exp_config["precalc_metrics"],
+            debug=False
+        )
+        write_results(
+            simple_df=corr_df["average"],
+            detail_df=corr_df,
+            simple_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.txt"), 
+            detail_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.json"), 
+        )
 
 
 def write_results(

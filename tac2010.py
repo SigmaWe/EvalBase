@@ -6,6 +6,7 @@ import pandas
 import evalbase
 sys.path.append(os.path.join(evalbase.path, "SueNes/human/tac"))
 import tac
+import eval_utils
 
 
 
@@ -130,8 +131,6 @@ def load_tac(dataroot: str, debug=False):
 
 
 def main(exp_config: dict):
-    import eval_utils
-
     # FIXME: This is cyclic import 
     tac_df_path = os.path.join(evalbase.path, "dataloader/tac_df.pkl")
 
@@ -143,37 +142,4 @@ def main(exp_config: dict):
 
     dataset_name = exp_config["dataset_name"]
 
-    # TODO: Move the code below into one function under eval_utils.py
-    for eval_level in exp_config["eval_levels"]:  
-        if eval_level == "summary":
-            eval_fn = eval_utils.eval_summary_level
-        elif eval_level == "system":
-            eval_fn = eval_utils.eval_system_level
-
-        print(f"{dataset_name} at {eval_level.capitalize()} Level")
-        
-        corr_df = eval_utils.eval_summary_level(
-            dataset_name=dataset_name,
-            dataset_df=dataset_df,
-            exp_approaches=exp_config["approaches"],
-            exp_models=exp_config["nlg_metrics"],
-            corr_metrics=exp_config["corr_metrics"],
-            document_column=exp_config["document_column"],
-            docID_column=exp_config["docID_column"],
-            system_summary_column=exp_config["system_summary_column"],
-            reference_summary_column=exp_config["reference_summary_column"],
-            human_metrics=exp_config["human_metrics"],
-            pre_calculated_metrics=exp_config["precalc_metrics"],
-            is_multi=exp_config["is_multi"],
-            debug=False
-        )
-        eval_utils.write_results(
-            simple_df=corr_df['average'],
-            detail_df=corr_df,
-            simple_path=os.path.join(
-                exp_config["result_path_root"],
-                f"{dataset_name}_{eval_level}.txt"), 
-            detail_path=os.path.join(
-                exp_config["result_path_root"],
-                f"{dataset_name}_{eval_level}.json"), 
-        )
+    eval_utils.eval_and_write(dataset_df, dataset_name, exp_config)
