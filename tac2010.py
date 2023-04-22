@@ -1,15 +1,12 @@
 # Running experiments in TAC 2010 
 
-import json
-import sys
-
+import sys, os, pickle
 import pandas
 
-import env
-
-sys.path.append("../SueNes/human/tac")
+import evalbase
+sys.path.append(os.path.join(evalbase.path, "SueNes/human/tac"))
 import tac
-import os.path
+
 
 
 # 43 machine + 4 human summarizers per docsetID
@@ -59,6 +56,14 @@ def merge_article_summary_score(articles, summaries, scores, debug=False):
         counter += 1
         if debug and counter > 3:
             break
+
+    
+    # Set Pyramind to float
+    dataset_df["Pyramid"] = dataset_df["Pyramid"].astype(float)
+
+    # Set Linguistic and Overall to int
+    dataset_df["Linguistic"] = dataset_df["Linguistic"].astype(int)
+    dataset_df["Overall"] = dataset_df["Overall"].astype(int)
 
     return dataset_df
 
@@ -124,31 +129,51 @@ def load_tac(dataroot: str, debug=False):
     return dataset_df
 
 
-if __name__ == "__main__":
+def main(exp_config: dict):
+    import eval_utils
 
-    import pickle
+    # FIXME: This is cyclic import 
+    tac_df_path = os.path.join(evalbase.path, "dataloader/tac_df.pkl")
 
-    debug = True
-
-    if debug:
-        dataset_df = pickle.load(open('tac_df.pkl', 'rb'))
+    if os.path.exists(tac_df_path):
+        dataset_df = pickle.load(open(tac_df_path, "rb"))
     else:
-        dataset_df = load_tac("/media/forrest/12T_EasyStore1/data/NLP/resources/TAC_DUC/TAC2010", debug=debug)
-        pickle.dump(dataset_df, open("tac_df.pkl", 'wb'))
+        dataset_df = load_tac(exp_config["data_path"], debug=False)
+        pickle.dump(dataset_df, open(tac_df_path, "wb"))
 
-    import eval_util
+    dataset_name = exp_config["dataset_name"]
 
-    dataset_config = env.datasets["tac2010"]
+    # TODO: Move the code below into one function under eval_utils.py
+    for eval_level in exp_config["eval_levels"]:  
+        if eval_level == "summary":
+            eval_fn = eval_utils.eval_summary_level
+        elif eval_level == "system":
+            eval_fn = eval_utils.eval_system_level
 
-    corr_df = eval_util.eval_summary_level(dataset_df, debug=debug, is_multi=True,
-                                           docID_column=dataset_config["docID_column"])
-    with pandas.option_context('display.max_rows', None,
-                               'display.max_columns', None,
-                               'display.precision', 3,
-                               ):
-        print(corr_df['average'])
-
-    with open(f"result_tac2010.json", 'w') as f:
-        json_ugly = corr_df.to_json(orient="index")
-        json_parsed = json.loads(json_ugly)
-        f.write(json.dumps(json_parsed, indent=2))
+        print(f"{dataset_name} at {eval_level.capitalize()} Level")
+        
+        corr_df = eval_utils.eval_summary_level(
+            dataset_name=dataset_name,
+            dataset_df=dataset_df,
+            exp_approaches=exp_config["approaches"],
+            exp_models=exp_config["nlg_metrics"],
+            corr_metrics=exp_config["corr_metrics"],
+            document_column=exp_config["document_column"],
+            docID_column=exp_config["docID_column"],
+            system_summary_column=exp_config["system_summary_column"],
+            reference_summary_column=exp_config["reference_summary_column"],
+            human_metrics=exp_config["human_metrics"],
+            pre_calculated_metrics=exp_config["precalc_metrics"],
+            is_multi=exp_config["is_multi"],
+            debug=False
+        )
+        eval_utils.write_results(
+            simple_df=corr_df['average'],
+            detail_df=corr_df,
+            simple_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.txt"), 
+            detail_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.json"), 
+        )

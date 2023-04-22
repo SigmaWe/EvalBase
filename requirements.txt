@@ -1,11 +1,8 @@
 numpy
-sentence-transformers
 torch
 tqdm
 tabulate
 scipy
 evaluate
 pandas
-rouge_score
-bert_score
-git+https://github.com/google-research/bleurt.git
+bs4

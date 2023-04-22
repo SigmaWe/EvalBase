@@ -3,10 +3,6 @@ import pandas
 import scipy
 import json
 
-import env
-
-
-
 import typing
 from tqdm.auto import tqdm
 
@@ -26,9 +22,9 @@ from tqdm.auto import tqdm
 
 
 def model_eval(
-        sys_summaries: list,
-        ref_summaries: list,
-        docs: list,
+        sys_summaries: typing.List[str],
+        ref_summaries: typing.List[str],
+        docs: typing.List[str],
         metrics: dict, # keys as strings, and values as functions
         approaches: typing.List[str]) -> pandas.DataFrame:
     """Given a batch of samples, run various automated summary metrics to evaluate the quality of summaries. 
@@ -52,7 +48,7 @@ def model_eval(
     index = pandas.MultiIndex.from_tuples([], names=["approach", "model", "score_name"])
     batch_result_df = pandas.DataFrame((), columns=index)
 
-    for metric_name, metric_fn in metrics.items():
+    for metric_name, metric_fn in tqdm(metrics.items(), desc="metrics", leave=False):
         for approach in approaches:
             # print('Evaluating on ' + approach + ' approach')
             cands = sys_summaries
@@ -96,26 +92,25 @@ def pool_multidoc(batch_df: pandas.DataFrame, result_df: pandas.DataFrame):
     # We do not use ignore_index below because it will otherwise reset multiindex column headers to 0 to N. 
     combined = pandas.concat([docsetID_and_System, result_df], axis=1)
 
-    combined_pooled = combined.groupby(['docsetID', 'System']).mean()
+    combined_pooled = combined.groupby(['docsetID', 'System']).mean(numeric_only=True)
     # combined_pooled = combined_pooled.drop(["index", 'docsetID', 'System'], axis=1)
 
     # Drop scores of the common summary
     human_scores = batch_df.drop(['ArticleText', 'ReferenceSummary',
                                   'SystemSummary'], axis=1)
-    human_scores = batch_df.groupby(['docsetID', 'System']).mean()
+    human_scores = human_scores.groupby(['docsetID', 'System']).mean(numeric_only=True)
 
     # print (batch_df_new.shape, combined_pooled.shape)
 
     # The returned DataFrame does not have multi-indexed columns but has tuples as column names 
     return human_scores, combined_pooled
 
-
-# TODO: Default value shouldn't be tied to env
 def eval_summary_level(
+        dataset_name: str,
         dataset_df: pandas.DataFrame,
         exp_approaches: typing.List[str],
-        exp_models: typing.Dict[str, typing.Callable] = env.metrics,
-        corr_metrics: typing.List[str] = env.corr_metrics,
+        exp_models: typing.Dict[str, typing.Callable],
+        corr_metrics: typing.List[str],
         document_column: str = "",
         docID_column: str = "",  # TODO: some in newsroom, realsumm, summeval have not supported this yet
         system_summary_column: str = "",
@@ -148,7 +143,7 @@ def eval_summary_level(
     # We could let the multilevel on columns,
     #  but the code will be slightly longer.
 
-    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique())):
+    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique(), desc=" ".join([dataset_name, "summary"]))):
 
         if debug:
             if batchID > 2:
@@ -182,10 +177,11 @@ def eval_summary_level(
 
 
 def eval_system_level(
+        dataset_name: str,
         dataset_df: pandas.DataFrame,
         exp_approaches: typing.List[str],
-        exp_models: typing.Dict[str, typing.Callable] = env.metrics,
-        corr_metrics: typing.List[str] = env.corr_metrics,
+        exp_models: typing.Dict[str, typing.Callable],
+        corr_metrics: typing.List[str],
         document_column: str = "",
         docID_column: str = "",  # TODO: some in newsroom, realsumm, summeval have not supported this yet
         system_summary_column: str = "",
@@ -208,7 +204,7 @@ def eval_system_level(
     overall_human_scores = pandas.DataFrame((), index=index)
     overall_batch_result_df = pandas.DataFrame((), index=index)
 
-    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique())):
+    for batchID, docID in enumerate(tqdm(dataset_df[docID_column].unique(), desc=" ".join([dataset_name, "system"]))):
         batch = dataset_df[dataset_df[docID_column] == docID]
         docs = batch[document_column].to_numpy()
         sys_summs = batch[system_summary_column].to_numpy()

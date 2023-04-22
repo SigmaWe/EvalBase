@@ -10,8 +10,6 @@ import json
 
 import pandas
 from tqdm.auto import tqdm
-
-import env
 import os.path
 
 
@@ -203,8 +201,9 @@ def df_to_nested_dict(df: pandas.DataFrame) -> dict:
     return {k: nest(v) for k, v in d.items()}
 
 
-def main():
-    human_evaluation_csv_with_refs = env.datasets["newsroom"]["human_eval_w_refs_path"]
+def main(exp_config:dict):
+    human_evaluation_csv_with_refs = exp_config["human_eval_w_refs_path"]
+    print (human_evaluation_csv_with_refs)
 
     if os.path.exists(human_evaluation_csv_with_refs):
         print("Loading data...")
@@ -212,54 +211,47 @@ def main():
     else:
         print("Appending reference summaries to Newsroom human evaluation part...")
         df = append_reference_summaries_to_newsroom_human_evaluation(
-            env.datasets["newsroom"]["human_eval_only_path"],
-            env.datasets["newsroom"]["refs_path"],
+            exp_config["human_eval_only_path"],
+            exp_config["refs_path"],
             # See doc above for function
             # append_reference_summaries_to_newsroom_human_evaluation
             # to see where to get the CSV and JSONL files
             dump_csv=human_evaluation_csv_with_refs)
-    df = pool_human_rating(df)
-    dataset_config = env.datasets["newsroom"]
+    dataset_df = pool_human_rating(df)
 
+    dataset_name = exp_config["dataset_name"]
     import eval_utils
 
-    print("Newsroom Summary-Level")
-    corr_df = eval_utils.eval_summary_level(
-        dataset_df=df,
-        exp_approaches=dataset_config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=dataset_config["document_column"],
-        docID_column=dataset_config["docID_column"],
-        system_summary_column=dataset_config["system_summary_column"],
-        reference_summary_column=dataset_config["reference_summary_column"],
-        human_metrics=dataset_config["human_metrics"],
-        debug=False,
-        is_multi=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df['average'],
-        detail_df=corr_df,
-        simple_path="results/newsroom_summary.txt",
-        detail_path="results/newsroom_summary.json"
-    )
+    # TODO: Move the code below into one function under eval_utils.py
+    for eval_level in exp_config["eval_levels"]:  
+        if eval_level == "summary":
+            eval_fn = eval_utils.eval_summary_level
+        elif eval_level == "system":
+            eval_fn = eval_utils.eval_system_level
 
-    print("Newsroom System-Level")
-    corr_df = eval_utils.eval_system_level(
-        dataset_df=df,
-        exp_approaches=dataset_config["approaches"],
-        exp_models=env.metrics,
-        corr_metrics=env.corr_metrics,
-        document_column=dataset_config["document_column"],
-        docID_column=dataset_config["docID_column"],
-        system_summary_column=dataset_config["system_summary_column"],
-        reference_summary_column=dataset_config["reference_summary_column"],
-        human_metrics=dataset_config["human_metrics"],
-        debug=False,
-        is_multi=False
-    )
-    eval_utils.write_results(
-        simple_df=corr_df,
-        simple_path="results/newsroom_system.txt",
-        detail_path="results/newsroom_system.json"
-    )
+        print(f"{dataset_name} at {eval_level.capitalize()} Level")
+        
+        corr_df = eval_utils.eval_summary_level(
+            dataset_name=dataset_name,
+            dataset_df=dataset_df,
+            exp_approaches=exp_config["approaches"],
+            exp_models=exp_config["nlg_metrics"],
+            corr_metrics=exp_config["corr_metrics"],
+            document_column=exp_config["document_column"],
+            docID_column=exp_config["docID_column"],
+            system_summary_column=exp_config["system_summary_column"],
+            reference_summary_column=exp_config["reference_summary_column"],
+            human_metrics=exp_config["human_metrics"],
+            pre_calculated_metrics=exp_config["precalc_metrics"],
+            debug=False
+        )
+        eval_utils.write_results(
+            simple_df=corr_df['average'],
+            detail_df=corr_df,
+            simple_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.txt"), 
+            detail_path=os.path.join(
+                exp_config["result_path_root"],
+                f"{dataset_name}_{eval_level}.json"), 
+        )
