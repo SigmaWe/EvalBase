@@ -5,8 +5,8 @@ import typing
 import pandas
 
 import evalbase
-import eval_utils
 import os
+from eval_utils import eval_and_write
 
 
 def clean_text(s: str):
@@ -109,4 +109,4 @@ def main(exp_config):
     dataset_name = exp_config["dataset_name"]
     dataset_df = load_realsumm(exp_config["data_path"])
 
-    eval_utils.eval_and_write(dataset_name, dataset_df, exp_config)
+    eval_and_write(dataset_name, dataset_df, exp_config)

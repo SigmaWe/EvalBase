@@ -1,6 +1,6 @@
 import json, typing, os
 import pandas
-import eval_utils
+from eval_utils import eval_and_write
 import evaluate
 
 
@@ -94,7 +94,7 @@ def load_summeval(paired_jsonl):
 def main(exp_config: dict):
     dataset_name = exp_config["dataset_name"]
     dataset_df = load_summeval(exp_config["data_path"])
-    eval_utils.eval_and_write(dataset_name, dataset_df, exp_config)
+    eval_and_write(dataset_name, dataset_df, exp_config)
 
 
 if __name__ == "__main__":

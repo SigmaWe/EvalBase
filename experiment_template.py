@@ -123,7 +123,7 @@ qags_config = {
     "data_path": os.path.join(evalbase.path, "dataloader/qags/data")
 }
 qags_config.update(common_exp_config)
-evalbase.factcc.qags_main(qags_config)
+evalbase.qaqs.main(qags_config)
 ### End of example for the QAGS dataset ###
 
 ### Example configurations for the Frank dataset ###
@@ -138,7 +138,7 @@ frank_config = {
     "data_path": os.path.join(evalbase.path, "dataloader/frank/data")
 }
 frank_config.update(common_exp_config)
-evalbase.factcc.frank_main(frank_config)
+evalbase.frank.main(frank_config)
 ### End of example for the Frank dataset ###
 
 ### Example configurations for the FastCC dataset ###
@@ -159,5 +159,5 @@ fastcc_config = {
     "data_path": os.path.join(evalbase.path, "dataloader/factCC/data_pairing/data/generated_data/data-clipped")
 }
 fastcc_config.update(common_exp_config)
-evalbase.factcc.factCC_main(fastcc_config)
+evalbase.factcc.main(fastcc_config)
 ### End of example for the FastCC dataset ###

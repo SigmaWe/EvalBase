@@ -12,7 +12,7 @@ import pandas
 from tqdm.auto import tqdm
 import os.path
 
-import eval_utils
+from eval_utils import eval_and_write
 
 
 def clean_text(s: str):
@@ -223,4 +223,4 @@ def main(exp_config:dict):
 
     dataset_name = exp_config["dataset_name"]
 
-    eval_utils.eval_and_write(dataset_name, dataset_df, exp_config)
+    eval_and_write(dataset_name, dataset_df, exp_config)
