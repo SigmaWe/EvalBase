@@ -12,6 +12,7 @@ dataloader/cnndm/
 dataloader/cnn_stories.tgz
 dataloader/dailymail_stories.tgz
 dataloader/summeval_annotations.aligned.scored.jsonl
+dataloader/tac_df.pkl
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,python,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,python,pycharm

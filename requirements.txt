@@ -5,3 +5,4 @@ tabulate
 scipy
 evaluate
 pandas
+bs4
