@@ -253,8 +253,16 @@ def eval_and_write(dataset_name, dataset_df, exp_config):
             pre_calculated_metrics=exp_config["precalc_metrics"],
             debug=False
         )
+
+        if eval_level == "summary":
+            simple_df = corr_df["average"]
+        elif eval_level == "system":
+            simple_df = corr_df
+        else:
+            raise NotImplementedError(f"Unknown eval_level: {eval_level}")
+        
         write_results(
-            simple_df=corr_df["average"],
+            simple_df=simple_df,
             detail_df=corr_df,
             simple_path=os.path.join(
                 exp_config["result_path_root"],
