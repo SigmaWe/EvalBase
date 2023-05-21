@@ -142,4 +142,4 @@ def main(exp_config: dict):
 
     dataset_name = exp_config["dataset_name"]
 
-    eval_and_write(dataset_df, dataset_name, exp_config)
+    eval_and_write(dataset_name, dataset_df, exp_config)

@@ -71,7 +71,7 @@ evalbase.realsumm.main(realsumm_abs_config)
 realsumm_ext_config = realsumm_abs_config
 realsumm_ext_config["dataset_name"] = "realsumm_ext"
 realsumm_ext_config["data_path"] = os.path.join(evalbase.path, "dataloader", "ext.pkl")  # you need to get this file. See ReadMe.
-# realsumm.main(realsumm_ext_config)
+evalbase.realsumm.main(realsumm_ext_config)
 ### End of example for the EXtractive track in Realsumm ###
 
 ### Example configurations for the Newsroom dataset ### 
@@ -120,7 +120,8 @@ qags_config = {
     # FIXME only one summary is available
     "reference_summary_column": "sum",
     "approaches": ["new"],
-    "data_path": os.path.join(evalbase.path, "dataloader/qags/data")
+    "data_path": os.path.join(evalbase.path, "dataloader/qags/data"),
+    "precalc_metrics": []
 }
 qags_config.update(common_exp_config)
 evalbase.qaqs.main(qags_config)
@@ -135,7 +136,8 @@ frank_config = {
     "system_summary_column": "sum",
     "reference_summary_column": "ref",
     "approaches": ["new"],
-    "data_path": os.path.join(evalbase.path, "dataloader/frank/data")
+    "data_path": os.path.join(evalbase.path, "dataloader/frank/data"),
+    "precalc_metrics": []
 }
 frank_config.update(common_exp_config)
 evalbase.frank.main(frank_config)
@@ -156,7 +158,8 @@ fastcc_config = {
         "dev": "data-dev.jsonl",
         "test": "data-test.jsonl"
     },
-    "data_path": os.path.join(evalbase.path, "dataloader/factCC/data_pairing/data/generated_data/data-clipped")
+    "data_path": os.path.join(evalbase.path, "dataloader/factCC/data_pairing/data/generated_data/data-clipped"),
+    "precalc_metrics": []
 }
 fastcc_config.update(common_exp_config)
 evalbase.factcc.main(fastcc_config)

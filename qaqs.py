@@ -40,7 +40,9 @@ def main(exp_config: dict):
     cnndm = load_qags(os.path.join(QGAS_PATH, "mturk_cnndm.jsonl"))
     xsum = load_qags(os.path.join(QGAS_PATH, "mturk_xsum.jsonl"))
     # DEBUG using part of the data
-    eval_and_write("qags-cnndm", cnndm, {**exp_config, "eval_levels": ["system"]})
-    eval_and_write("qags-xsum", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["system"]})
-    eval_and_write("qaqs-cnndm-pooled", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})
-    eval_and_write("qags-xsum-pooled", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})
+    if "system" in exp_config["eval_levels"]:
+        eval_and_write("qags-cnndm", cnndm, {**exp_config, "eval_levels": ["system"]})
+        eval_and_write("qags-xsum", xsum, {**exp_config, "eval_levels": ["system"]})
+    if "summary" in exp_config["eval_levels"]:
+        eval_and_write("qaqs-cnndm-pooled", cnndm, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})
+        eval_and_write("qags-xsum-pooled", xsum, {**exp_config, "docID_column": "id0", "eval_levels": ["summary"]})

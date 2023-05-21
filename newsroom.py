@@ -175,10 +175,10 @@ def pool_human_rating(
 
     if pool_method == "mean":
         df = df.groupby(
-            by=["ArticleID", "System", "ArticleText", "SystemSummary", "ReferenceSummary"]).mean().reset_index()
+            by=["ArticleID", "System", "ArticleText", "SystemSummary", "ReferenceSummary"]).mean(numeric_only=True).reset_index()
     elif pool_method == "median":
         df = df.groupby(
-            by=["ArticleID", "System", "ArticleText", "SystemSummary", "ReferenceSummary"]).median().reset_index()
+            by=["ArticleID", "System", "ArticleText", "SystemSummary", "ReferenceSummary"]).median(numeric_only=True).reset_index()
     else:
         print("Wrong consensus method")
         exit()
